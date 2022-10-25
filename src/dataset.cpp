@@ -1,6 +1,5 @@
 #include <holodaye/elevation.h>
 #include "math.h"
-#include <iostream>
 
 ElevationData::ElevationData(){
     fake = true;
@@ -16,6 +15,8 @@ float ElevationData::get_elevation(int x, int y){
         double r = sqrt((double)x*x + (double)y*y);
         return r<=39112.82854?abs(x)*(0.5*sin(r/300)+0.5)/10:-1.0; 
     }
+    else
+        return 0.0;
 }
 
 
@@ -69,32 +70,32 @@ void ElevationQuery::query(float* h, float* d, int length){
                 last_x = (int)ceil(origin_x/resolution)*resolution;
                 error = (last_x - origin_x)*direction_y/direction_x + origin_y;
                 last_y = (int)round(error/resolution)*resolution;
-                error = error - last_y;
-                step_size = resolution*direction_y/direction_x;
+                error = (error - last_y)/resolution;
+                step_size = direction_y/direction_x;
                 break;
             case 1:
             case 2:
                 last_y = (int)ceil(origin_y/resolution)*resolution;
                 error = (last_y - origin_y)*direction_x/direction_y + origin_x;
                 last_x = (int)round(error/resolution)*resolution;
-                error = error - last_x;
-                step_size = resolution*direction_x/direction_y;
+                error = (error - last_x)/resolution;
+                step_size = direction_x/direction_y;
                 break;
             case 3:
             case 4:
                 last_x = (int)floor(origin_x/resolution)*resolution;
                 error = (last_x - origin_x)*direction_y/direction_x + origin_y;
                 last_y = (int)round(error/resolution)*resolution;
-                error = error - last_y;
-                step_size = -resolution*direction_y/direction_x;
+                error = (error - last_y)/resolution;
+                step_size = -direction_y/direction_x;
                 break;
             case 5:
             case 6:
                 last_y = (int)floor(origin_y/resolution)*resolution;
                 error = (last_y - origin_y)*direction_x/direction_y + origin_x;
                 last_x = (int)round(error/resolution)*resolution;
-                error = error - last_x;
-                step_size = -resolution*direction_x/direction_y;
+                error = (error - last_x)/resolution;
+                step_size = -direction_x/direction_y;
                 break;
         }
         count++;
@@ -103,11 +104,11 @@ void ElevationQuery::query(float* h, float* d, int length){
     // Line Rasterization: Bresenham's line algorithm
     switch(mode){
         case 0:
-            for(;count++;count<length){
-                last_x++;
+            for(;count<length;count++){
+                last_x+=resolution;
                 error += step_size;
                 if(error>=0.5){
-                    last_y++;
+                    last_y+=resolution;
                     error-=1.0;
                 }
                 h[count] = data->get_elevation(last_x,last_y);
@@ -115,11 +116,11 @@ void ElevationQuery::query(float* h, float* d, int length){
             }
             break;
         case 1:
-            for(;count++;count<length){
-                last_y++;
+            for(;count<length;count++){
+                last_y+=resolution;
                 error += step_size;
                 if(error>=0.5){
-                    last_x++;
+                    last_x+=resolution;
                     error-=1.0;
                 }
                 h[count] = data->get_elevation(last_x,last_y);
@@ -127,11 +128,11 @@ void ElevationQuery::query(float* h, float* d, int length){
             }
             break;
         case 2:
-            for(;count++;count<length){
-                last_y++;
+            for(;count<length;count++){
+                last_y+=resolution;
                 error += step_size;
                 if(error<=-0.5){
-                    last_x--;
+                    last_x-=resolution;
                     error+=1.0;
                 }
                 h[count] = data->get_elevation(last_x,last_y);
@@ -139,11 +140,11 @@ void ElevationQuery::query(float* h, float* d, int length){
             }
             break;
         case 3:
-            for(;count++;count<length){
-                last_x--;
+            for(;count<length;count++){
+                last_x-=resolution;
                 error += step_size;
                 if(error>=0.5){
-                    last_y++;
+                    last_y+=resolution;
                     error-=1.0;
                 }
                 h[count] = data->get_elevation(last_x,last_y);
@@ -151,11 +152,11 @@ void ElevationQuery::query(float* h, float* d, int length){
             }
             break;
         case 4:
-            for(;count++;count<length){
-                last_x--;
+            for(;count<length;count++){
+                last_x-=resolution;
                 error += step_size;
                 if(error<=-0.5){
-                    last_y--;
+                    last_y-=resolution;
                     error+=1.0;
                 }
                 h[count] = data->get_elevation(last_x,last_y);
@@ -163,11 +164,11 @@ void ElevationQuery::query(float* h, float* d, int length){
             }
             break;
         case 5:
-            for(;count++;count<length){
-                last_y--;
+            for(;count<length;count++){
+                last_y-=resolution;
                 error += step_size;
                 if(error<=-0.5){
-                    last_x--;
+                    last_x-=resolution;
                     error+=1.0;
                 }
                 h[count] = data->get_elevation(last_x,last_y);
@@ -175,11 +176,11 @@ void ElevationQuery::query(float* h, float* d, int length){
             }
             break;
         case 6:
-            for(;count++;count<length){
-                last_y--;
+            for(;count<length;count++){
+                last_y-=resolution;
                 error += step_size;
                 if(error>=0.5){
-                    last_x++;
+                    last_x+=resolution;
                     error-=1.0;
                 }
                 h[count] = data->get_elevation(last_x,last_y);
@@ -187,11 +188,11 @@ void ElevationQuery::query(float* h, float* d, int length){
             }
             break;
         case 7:
-            for(;count++;count<length){
-                last_x++;
+            for(;count<length;count++){
+                last_x+=resolution;
                 error += step_size;
                 if(error<=-0.5){
-                    last_y--;
+                    last_y-=resolution;
                     error+=1.0;
                 }
                 h[count] = data->get_elevation(last_x,last_y);

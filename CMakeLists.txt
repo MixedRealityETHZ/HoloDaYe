@@ -26,11 +26,17 @@ add_subdirectory(ext/Catch2)
 
 # These tests can use the Catch2-provided main
 # Unit test for ElevationQuery
-add_executable(DummyElevationTest 
-    test/dummy_elevation_test.cpp
+add_executable(DummyElevationDataTest 
+    test/dummy_elevation_data_test.cpp
     src/dataset.cpp
 )
-target_link_libraries(DummyElevationTest PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(DummyElevationDataTest PRIVATE Catch2::Catch2WithMain)
+
+add_executable(ElevationQueryTest 
+    test/elevation_query_test.cpp
+    src/dataset.cpp
+)
+target_link_libraries(ElevationQueryTest PRIVATE Catch2::Catch2WithMain)
 
 # These tests need their own main
 # add_executable(custom-main-tests test.cpp test-main.cpp)
@@ -38,4 +44,5 @@ target_link_libraries(DummyElevationTest PRIVATE Catch2::Catch2WithMain)
 
 include(CTest)
 include(Catch)
-catch_discover_tests(DummyElevationTest)
+catch_discover_tests(DummyElevationDataTest)
+catch_discover_tests(ElevationQueryTest)

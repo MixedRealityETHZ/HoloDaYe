@@ -1,6 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
 #include <holodaye/elevation.h>
-#include <iostream>
 
 TEST_CASE( "Dummy test for dataset class", "[ElevationData]" ) {
     // Create a mew ElevationData object and test it's basic functionality
@@ -23,4 +22,5 @@ TEST_CASE( "Dummy test for dataset class", "[ElevationData]" ) {
                 REQUIRE( data->get_elevation(x,y)<0 );
         }
     }
+    delete data;
 }
