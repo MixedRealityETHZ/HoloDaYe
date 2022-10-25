@@ -1,1 +1,10 @@
 .vscode
+/build
+.DS_Store
+/holodaye
+CMakeCache.txt
+CMakeFiles
+Makefile
+*.cmake
+.idea
+/ext
