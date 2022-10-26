@@ -18,6 +18,7 @@ add_executable(holodaye
     # Source code files
     src/dataset.cpp
     src/main.cpp
+    src/query.cpp
 )
 
 # All codes below are in the purpose of testing.
@@ -35,6 +36,7 @@ target_link_libraries(DummyElevationDataTest PRIVATE Catch2::Catch2WithMain)
 add_executable(ElevationQueryTest 
     test/elevation_query_test.cpp
     src/dataset.cpp
+    src/query.cpp
 )
 target_link_libraries(ElevationQueryTest PRIVATE Catch2::Catch2WithMain)
 
