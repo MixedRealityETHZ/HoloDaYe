@@ -3,7 +3,7 @@ Inspired by the project nori2 from the lecture computer graphics, I decide to us
 ## Coding conventions
 - No strict rules for the format of the code text.
 - Seperate declaration and definitions into header files and cpp files respectively.
-- Before submitting pull requests, you should write unit tests for your code and make sure that the code could work as you expected. In such manner the effort to debug for everyone could be minimized.
+- Before submitting pull requests, you should write unit tests for your code and make sure that the code could work as you expected. In such manner the effort to debug could be minimized for everyone.
 ## File Structure
 
 |File/Folder Name|Usage|Notice|
