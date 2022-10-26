@@ -1,0 +1,13 @@
+# This CMake file is responsible for compiling dependency libraries and
+# setting up suitable compiler flags for various platforms. You do not
+# need to read or change anything in this file; see CMakeLists.txt instead.
+
+include(CMakeParseArguments)
+
+# Set a default build configuration (Release)
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to 'Release' as none was specified.")
+  set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release"
+    "MinSizeRel" "RelWithDebInfo")
+endif()
