@@ -20,3 +20,5 @@ Inspired by the project nori2 from the lecture computer graphics, I decide to us
 Here we use Catch2 for unit tests because it is much smaller and neater than google test. About Catch2, please read their [readme](ext/Catch2/README.md) or check their [github](https://github.com/catchorg/Catch2).
 ### Landscape Demo
 Those files under the folder ```landscape_demo``` is for visualizing original/fake elevation map file. The script should be runned with Matlab.
+
+### [ARKit demos](https://github.com/olucurious/Awesome-ARKit)
