@@ -1,0 +1,5 @@
+${PODS_ROOT}/Target Support Files/Pods-app-demo/Pods-app-demo-frameworks.sh
+${BUILT_PRODUCTS_DIR}/GRDB.swift/GRDB.framework
+${BUILT_PRODUCTS_DIR}/LocoKit/LocoKit.framework
+${PODS_ROOT}/LocoKitCore/LocoKitCore.framework
+${BUILT_PRODUCTS_DIR}/Upsurge/Upsurge.framework
