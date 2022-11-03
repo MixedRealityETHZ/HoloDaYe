@@ -21,4 +21,4 @@ Here we use Catch2 for unit tests because it is much smaller and neater than goo
 ### Landscape Demo
 Those files under the folder ```landscape_demo``` is for visualizing original/fake elevation map file. The script should be runned with Matlab.
 
-### [ARKit demos](https://github.com/olucurious/Awesome-ARKit)
+### [App Demo](app-demo/README.md)
