@@ -14,11 +14,13 @@ include_directories(include)
 add_executable(holodaye
     # Header files
     # include/holodaye/elevation.h
+    # include/holodaye/output.h
 
     # Source code files
     src/dataset.cpp
     src/main.cpp
     src/query.cpp
+    src/output.cpp
 )
 
 # All codes below are in the purpose of testing.
