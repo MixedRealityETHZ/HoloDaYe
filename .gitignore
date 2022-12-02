@@ -6,3 +6,5 @@ CMakeCache.txt
 CMakeFiles
 Makefile
 .idea
+.vs/
+out/

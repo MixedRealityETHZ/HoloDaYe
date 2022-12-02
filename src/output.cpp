@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include "holodaye/elevation.h"
 #include "holodaye/output.h"
 #include <math.h>
