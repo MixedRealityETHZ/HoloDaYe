@@ -1,2 +1,2 @@
 split origin.sh
-bash x??&
+ls x?? | xargs -I {} -P 0 bash {} &

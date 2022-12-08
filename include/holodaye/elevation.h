@@ -4,6 +4,8 @@ class ElevationData{
 public:
     // default initialization
     ElevationData();
+    // default destructor
+    ~ElevationData();
     // Check whether this is a fake data or a real one.
     bool isfake();
     unsigned int getResolution();
@@ -11,6 +13,13 @@ public:
 private:
     bool fake;
     int resolution;
+    int origin_x, origin_y;
+    int len_x, len_y;
+    int min_x, max_x, min_y, max_y;
+    int scale;
+    int block_side_length, block_size, block_length;
+    int* index_mat;
+    unsigned short int** zipped;
 };
 
 class ElevationQuery{

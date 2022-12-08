@@ -14,7 +14,12 @@ Inspired by the project nori2 from the lecture computer graphics, I decide to us
 |```include\```|header files and other internal libraries|   |
 |```test\```|unit test files||
 |```build\```|all things built|Not Tracked|
+|```data\```|scripts to generate data set|Limited Tracked|
 |```landscape_demo\```|demo to show the elevation data|Matlab|
+
+## Before running
+### About data set
+Since this repository contains no data, you need to first download the preprocessed data set from google drive(recommended) or to preprocess the data set from scratch according to the description in ```data\readme.md```
 ## Some notes
 ### Catch2
 Here we use Catch2 for unit tests because it is much smaller and neater than google test. About Catch2, please read their [readme](ext/Catch2/README.md) or check their [github](https://github.com/catchorg/Catch2).
