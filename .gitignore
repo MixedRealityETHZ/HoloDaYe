@@ -7,3 +7,5 @@ CMakeFiles
 Makefile
 .idea
 /data
+/out
+/.vs
