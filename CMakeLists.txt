@@ -15,13 +15,14 @@ add_executable(holodaye
     # Header files
     # include/holodaye/elevation.h
     # include/holodaye/output.h
+    # include/holodaye/utils.h
 
     # Source code files
     src/dataset.cpp
     src/main.cpp
     src/query.cpp
     src/output.cpp
-)
+    src/utils.cpp)
 
 # All codes below are in the purpose of testing.
 # Test with catch2
@@ -37,15 +38,13 @@ add_subdirectory(ext/Catch2)
 
 add_executable(ElevationDataTest 
     test/elevation_data_test.cpp
-    src/dataset.cpp
-)
+    src/dataset.cpp)
 target_link_libraries(ElevationDataTest PRIVATE Catch2::Catch2WithMain)
 
 add_executable(ElevationQueryTest 
     test/elevation_query_test.cpp
     src/dataset.cpp
-    src/query.cpp
-)
+    src/query.cpp)
 target_link_libraries(ElevationQueryTest PRIVATE Catch2::Catch2WithMain)
 
 # These tests need their own main
