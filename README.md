@@ -19,7 +19,7 @@ Inspired by the project nori2 from the lecture computer graphics, I decide to us
 
 ## Before running
 ### About data set
-Since this repository contains no data, you need to first download the preprocessed data set from google drive(recommended) or to preprocess the data set from scratch according to the description in ```data\readme.md```
+Since this repository contains no data, you need to first download the preprocessed data set from [google drive](https://drive.google.com/file/d/1VEH-fl9MNWkXczAR74fiCL-5GnzCDdr6/view?usp=sharing)(recommended) into ```data\``` or to preprocess the data set from scratch according to the description in ```data\readme.md```
 ## Some notes
 ### Catch2
 Here we use Catch2 for unit tests because it is much smaller and neater than google test. About Catch2, please read their [readme](ext/Catch2/README.md) or check their [github](https://github.com/catchorg/Catch2).
