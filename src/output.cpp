@@ -1,5 +1,6 @@
 #include "holodaye/elevation.h"
 #include "holodaye/output.h"
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include <vector>
 

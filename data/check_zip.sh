@@ -1,0 +1,1 @@
+ls swissalti3d_20*.zip | xargs -I {} -P 0 unzip -t {} > record.txt
