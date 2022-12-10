@@ -8,6 +8,8 @@
 #include <math.h>
 #include <vector>
 #include <sstream>
+#include "holodaye/utils.h"
+#define TRIPPLE(x) ((x)*(x)*(x))
 
 
 #pragma comment (lib, "ws2_32.lib")
@@ -15,7 +17,21 @@
 using namespace std;
 
 void main()
-{
+{	
+
+	// test
+	double lat = 47.37602004225053;
+    double lon = 8.546809259609395;
+	Struct2 lv95 = GPS2LV95(lon, lat);
+	
+    cout << "E is:" << lv95.E << " and N is " << lv95.N << "             ";
+	double height = 30000.5;
+	Struct1 gps = LV952GPS(lv95.E, lv95.N, height);
+
+	double E_ = ((double)lv95.E - 2600000) / 1000000;
+	cout << E_ << "                 ";
+
+	cout << "longitude is:" << gps.lon << " and latitude is " << gps.lat;
 	// Initialze winsock
 	WSADATA wsData;
 	WORD ver = MAKEWORD(2, 2);
