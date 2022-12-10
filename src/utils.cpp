@@ -6,7 +6,9 @@
 #define ROUND_2_INT(f) ((int)(f >= 0.0 ? (f + 0.5) : (f - 0.5)))
 #include <stdio.h>
 #include <iostream>
-
+#include <list>
+#include <iterator>
+using namespace std;
 
 
 Struct1 LV952GPS(int E, int N, double H) {
@@ -40,4 +42,38 @@ Struct2 GPS2LV95(double lon, double lat) {
     lv95.N = ROUND_2_INT(N_);
    
    return lv95;
+}
+
+
+void printNestedList(list<list<double> > nested_list)
+{
+    cout << "[\n";
+ 
+    // nested_list`s iterator(same type as nested_list)
+    // to iterate the nested_list
+    list<list<double> >::iterator nested_list_itr;
+ 
+    // Print the nested_list
+    for (nested_list_itr = nested_list.begin();
+        nested_list_itr != nested_list.end();
+        ++nested_list_itr) {
+ 
+        cout << " [";
+ 
+        // normal_list`s iterator(same type as temp_list)
+        // to iterate the normal_list
+        list<double>::iterator single_list_itr;
+ 
+        // pointer of each list one by one in nested list
+        // as loop goes on
+        list<double>& single_list_pointer = *nested_list_itr;
+ 
+        for (single_list_itr = single_list_pointer.begin();
+            single_list_itr != single_list_pointer.end();
+            single_list_itr++) {
+            cout << " " << *single_list_itr << " ";
+        }
+        cout << "]\n";
+    }
+    cout << "]";
 }

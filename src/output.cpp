@@ -5,11 +5,11 @@
 #include <math.h>
 #include <vector>
 
-ElevationAngle::ElevationAngle(int length, float x, float y, float angle, ElevationData* data): length_(length), x_(x), y_(y), angle_(angle), ElevData_(data) {};
+ElevationAngle::ElevationAngle(int length, float x, float y, ElevationData* data): length_(length), x_(x), y_(y), ElevData_(data) {};
 
 void ElevationAngle::FindPeakInCircle(){
-    float cur_angle = angle_ - M_PI/2;
-    for (int i = 0; i < 180; i++){
+    float cur_angle = 0;
+    for (int i = 0; i < 360; i++){
         cur_angle += M_PI/180;
         GetMaxSlope(cur_angle, i);
     }
