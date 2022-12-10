@@ -19,15 +19,22 @@ using namespace std;
 void main()
 {		
 	// Test Algo
-	float x = 19840;
-	float y = -14240;
+	// float x = 19840;
+	// float y = -14240;
+    float x = 2683691;
+    float y = 1247833;
 	// float z = 465.52;
 	float angle = 0;
 	int length = 100;
-	ElevationData* data = new ElevationData();
+    ElevationData *data = new ElevationData();
+    cout << "line 27" << endl;
+	// ElevationData* data = new ElevationData();
+    cout << data->getResolution() << endl;
+    cout << "line 28" << endl;
 	ElevationAngle eleAngle(length, x, y, data);
 	eleAngle.FindPeakInCircle();
-	
+	cout << "line 31" << endl;
+    
 	list <list<double>> result;	
 	for (int i = 0; i < 30; i++){
 		x = eleAngle.border_d_[i] * cos(i / 180 * M_PI);
@@ -36,7 +43,7 @@ void main()
 		result.push_back({gps.lat, gps.lon, gps.alt});
 	}
 
-	
+	cout << "line 41" << endl;
 	printNestedList(result);
 
 	// test

@@ -6,8 +6,8 @@
 TEST_CASE( "Test for query class", "[ElevationQuery]" ) {
     // Create a mew ElevationData
     ElevationData *data = new ElevationData();
-    REQUIRE( data->getResolution() == 20 );
-    REQUIRE( data->isfake() == true );
+    REQUIRE( data->getResolution() == 4 );
+    REQUIRE( data->isfake() == false );
     // Create a mew ElevationQuery object and test it's basic functionality
     SECTION( "Check querying for 1 element" ) {
         ElevationQuery query(4,4,atan(0.4),data); // (x,y) = (4,4), tan(theta)=0.4
