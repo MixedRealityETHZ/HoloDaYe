@@ -20,32 +20,30 @@ using namespace std;
 void main()
 {		
 	// // Test Algo
-	// // float x = 19840;
-	// // float y = -14240;
-    // float x = 2683691;
-    // float y = 1247833;
-	// // float z = 465.52;
-	// float angle = 0;
-	// int length = 100;
+    float x = 2683691;
+    float y = 1247833;
+	// float z = 465.52;
+	float angle = 0;
+	int length = 100;
     // ElevationData *data = new ElevationData();
-    // cout << "line 27" << endl;
-	// // ElevationData* data = new ElevationData();
-    // cout << data->getResolution() << endl;
-    // cout << "line 28" << endl;
-	// ElevationAngle eleAngle(length, x, y, data);
-	// eleAngle.FindPeakInCircle();
-	// cout << "line 31" << endl;
+    cout << "line 27" << endl;
+	ElevationData* data = new ElevationData();
+    cout << data->getResolution() << endl;
+    cout << "line 28" << endl;
+	ElevationAngle eleAngle(length, x, y, data);
+	eleAngle.FindPeakInCircle();
+	cout << "line 31" << endl;
     
-	// list <list<double>> result;	
-	// for (int i = 0; i < 30; i++){
-	// 	x = eleAngle.border_d_[i] * cos(i / 180 * M_PI);
-	// 	y = eleAngle.border_d_[i] * cos(i / 180 * M_PI);
-	// 	Struct1 gps = LV952GPS(x, y, eleAngle.border_h_[i]);
-	// 	result.push_back({gps.lat, gps.lon, gps.alt});
-	// }
+	list <list<double>> result;	
+	for (int i = 0; i < 30; i++){
+		x = eleAngle.border_d_[i] * cos(i / 180 * M_PI);
+		y = eleAngle.border_d_[i] * cos(i / 180 * M_PI);
+		Struct1 gps = LV952GPS(x, y, eleAngle.border_h_[i]);
+		result.push_back({gps.lat, gps.lon, gps.alt});
+	}
 
-	// cout << "line 41" << endl;
-	// printNestedList(result);
+	cout << "line 41" << endl;
+	printNestedList(result);
 
 	// test
 	// double lat = 47.37602004225053;
@@ -152,10 +150,10 @@ void main()
 		}
 
 		string received = string(buf, 0, bytesReceived);
-		cout << received << endl;
+		// cout << received << endl;
 
 		// Read the data from cliend and process the data
-		vector<float> vect;
+		vector<double> vect;
 
 		stringstream ss(received);
 
@@ -164,6 +162,10 @@ void main()
 			if (ss.peek() == ',')
 				ss.ignore();
 		}
+
+		// [lat, lon]
+		Struct2 input = GPS2LV95(vect[0], vect[1]);
+		cout << "The message received from client: " << endl;
 		for (size_t i = 0; i < vect.size(); i++)
 			cout << setprecision(15) << vect[i] << endl;
 
