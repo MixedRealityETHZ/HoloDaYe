@@ -35,6 +35,8 @@ ElevationQuery::ElevationQuery(float x, float y, float theta, ElevationData* dat
                 mode = 5; // 5pi/4 ~ 3pi/2
         }
     }
+    dataset_x = data->get_origin_x();
+    dataset_y = data->get_origin_y();
 }
 
 inline float ElevationQuery::compute_distance(int x,int y,float dx,float dy){
@@ -44,38 +46,38 @@ inline float ElevationQuery::compute_distance(int x,int y,float dx,float dy){
 void ElevationQuery::query(float* h, float* d, int length){
     int count = 0;
     if(!started){
-        h[0] = data->get_elevation((int)round(origin_x/resolution)*resolution, (int)round(origin_y/resolution)*resolution);
+        h[0] = data->get_elevation((int)round((origin_x-dataset_x)/resolution)*resolution+dataset_x, (int)round((origin_y-dataset_y)/resolution)*resolution+dataset_y);
         d[0] = 0.0f;
         switch(mode){
             case 7:
             case 0:
-                last_x = (int)ceil(origin_x/resolution)*resolution;
+                last_x = (int)ceil((origin_x-dataset_x)/resolution)*resolution+dataset_x;
                 error = (last_x - origin_x)*direction_y/direction_x + origin_y;
-                last_y = (int)round(error/resolution)*resolution;
+                last_y = (int)round((error-dataset_y)/resolution)*resolution+dataset_y;
                 error = (error - last_y)/resolution;
                 step_size = direction_y/direction_x;
                 break;
             case 1:
             case 2:
-                last_y = (int)ceil(origin_y/resolution)*resolution;
+                last_y = (int)ceil((origin_y-dataset_y)/resolution)*resolution+dataset_y;
                 error = (last_y - origin_y)*direction_x/direction_y + origin_x;
-                last_x = (int)round(error/resolution)*resolution;
+                last_x = (int)round((error-dataset_x)/resolution)*resolution+dataset_x;
                 error = (error - last_x)/resolution;
                 step_size = direction_x/direction_y;
                 break;
             case 3:
             case 4:
-                last_x = (int)floor(origin_x/resolution)*resolution;
+                last_x = (int)floor((origin_x-dataset_x)/resolution)*resolution+dataset_x;
                 error = (last_x - origin_x)*direction_y/direction_x + origin_y;
-                last_y = (int)round(error/resolution)*resolution;
+                last_y = (int)round((error-dataset_y)/resolution)*resolution+dataset_y;
                 error = (error - last_y)/resolution;
                 step_size = -direction_y/direction_x;
                 break;
             case 5:
             case 6:
-                last_y = (int)floor(origin_y/resolution)*resolution;
+                last_y = (int)floor((origin_y-dataset_y)/resolution)*resolution+dataset_y;
                 error = (last_y - origin_y)*direction_x/direction_y + origin_x;
-                last_x = (int)round(error/resolution)*resolution;
+                last_x = (int)round((error-dataset_x)/resolution)*resolution+dataset_x;
                 error = (error - last_x)/resolution;
                 step_size = -direction_x/direction_y;
                 break;
