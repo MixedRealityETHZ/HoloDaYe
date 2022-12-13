@@ -52,6 +52,10 @@ bool ElevationData::isfake(){return fake;}
 
 unsigned int ElevationData::getResolution(){return resolution;}
 
+int ElevationData::get_origin_x(){return origin_x;}
+
+int ElevationData::get_origin_y(){return origin_y;}
+
 float ElevationData::get_elevation(int x, int y){
     if(!fake){
         int x_km = x/1000, y_km = y/1000;
