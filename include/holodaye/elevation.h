@@ -10,6 +10,8 @@ public:
     bool isfake();
     unsigned int getResolution();
     float get_elevation(int x, int y);
+    int get_origin_x();
+    int get_origin_y();
 private:
     bool fake;
     int resolution;
@@ -35,5 +37,6 @@ private:
     unsigned int mode, resolution;
     float error;
     bool started;
+    int dataset_x,dataset_y;
     ElevationData* data;
 };
