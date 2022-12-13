@@ -24,15 +24,16 @@ void main()
     float y = 1247833;
 	// float z = 465.52;
 	float angle = 0;
-	int length = 100;
+	int length = 1;
     // ElevationData *data = new ElevationData();
     cout << "line 27" << endl;
 	ElevationData* data = new ElevationData();
     cout << data->getResolution() << endl;
     cout << "line 28" << endl;
 	ElevationAngle eleAngle(length, x, y, data);
-	eleAngle.FindPeakInCircle();
 	cout << "line 31" << endl;
+	eleAngle.FindPeakInCircle();
+	
     
 	list <list<double>> result;	
 	for (int i = 0; i < 30; i++){
