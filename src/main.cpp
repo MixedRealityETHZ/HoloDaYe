@@ -20,35 +20,10 @@ using namespace std;
 void main()
 {		
 	// // Test Algo
-    float x = 2683691;
-    float y = 1247833;
-	// float z = 465.52;
-	float angle = 0;
-	int length = 1;
-    // ElevationData *data = new ElevationData();
-    cout << "line 27" << endl;
-	ElevationData* data = new ElevationData();
-    cout << data->getResolution() << endl;
-	ElevationQuery query(x,y,0,data);
-	float h[10],d[10];
-	query.query(h,d,5);
-	cout << h[0] << ','<< d[0] << "   " << h[1] << ','<< d[1]<< endl;
-    cout << "line 28" << endl;
-	ElevationAngle eleAngle(length, x, y, data);
-	cout << "line 31" << endl;
-	eleAngle.FindPeakInCircle();
 	
-    
-	list <list<double>> result;	
-	for (int i = 0; i < 30; i++){
-		x = eleAngle.border_d_[i] * cos(i / 180 * M_PI);
-		y = eleAngle.border_d_[i] * cos(i / 180 * M_PI);
-		Struct1 gps = LV952GPS(x, y, eleAngle.border_h_[i]);
-		result.push_back({gps.lat, gps.lon, gps.alt});
-	}
 
-	cout << "line 41" << endl;
-	printNestedList(result);
+	// cout << "line 41" << endl;
+	// printNestedList(result);
 
 	// test
 	// double lat = 47.37602004225053;
@@ -130,13 +105,13 @@ void main()
 	
 
 	// While loop: accept and echo message back to client
-	char buf[4096];
+	char buf[32768*10];
 
 	while (true)
 	{	
 		
 
-		ZeroMemory(buf, 4096);
+		ZeroMemory(buf, 32768*10);
 
 		// Wait for client to send data
 		int bytesReceived = recv(clientSocket, buf, 4096, 0);
@@ -169,11 +144,34 @@ void main()
 		}
 
 		// [lat, lon]
-		Struct2 input = GPS2LV95(vect[0], vect[1]);
+		Struct2 input = GPS2LV95(vect[1], vect[0]);
+		int x = input.E;
+		int y = input.N;
+
 		cout << "The message received from client: " << endl;
 		for (size_t i = 0; i < vect.size(); i++)
 			cout << setprecision(15) << vect[i] << endl;
 
+		float angle = 0;
+		int length = 1;
+		// ElevationData *data = new ElevationData();
+		cout<< "Start Calculation" << endl;
+		ElevationData* data = new ElevationData();
+		ElevationAngle eleAngle(length, x, y, data);
+		eleAngle.FindPeakInCircle();
+		
+		cout<< "Calculation Done" << endl;
+		// for(int i=0; i<360; i++)
+		// 	cout<< eleAngle.border_d_[i] << endl;
+		list <list<double>> result;	
+	
+		for (int i = 0; i < 49; i++){
+			float p_x = eleAngle.border_d_[i] * cos(i / 180 * M_PI) + x;
+			float p_y = eleAngle.border_d_[i] * sin(i / 180 * M_PI) + y;
+			Struct1 gps = LV952GPS(p_x, p_y, eleAngle.border_h_[i]);
+			result.push_back({gps.lat, gps.lon, gps.alt});
+		}
+		cout<< "Convert to GPS Done" << endl;
 // ----------------------------------------------server----------------------------------------
 		// Echo message back to client
 		// send(clientSocket, buf, bytesReceived + 1, 0);
@@ -199,7 +197,7 @@ void main()
 
 		// Convert the result to string stream and send back to client
 		list<string> message_list;
-		list <list<double>> result({{1.0896564839292, 47.37602004225053, 8.546809259609395}, {24.0896789839292, 33.39872004225053, 12.546890259609395}});
+		// list <list<double>> result({{1.0896564839292, 47.37602004225053, 8.546809259609395}, {24.0896789839292, 33.39872004225053, 12.546890259609395}});
 		for (auto& outer : result)
 		{
 			for (auto& inner : outer)
@@ -214,8 +212,11 @@ void main()
 
 		copy(message_list.begin(), message_list.end(), ostream_iterator<string>(stream, ","));
 		string message = stream.str();
+		cout<< message << endl;
+		cout<< "Generate Message Done" << endl;
 
 		send(clientSocket, message.c_str(), message.size() + 1, 0);
+		cout<< "Message is sent to client" << endl;
 
 		// // Close the socket
 		
