@@ -29,6 +29,10 @@ void main()
     cout << "line 27" << endl;
 	ElevationData* data = new ElevationData();
     cout << data->getResolution() << endl;
+	ElevationQuery query(x,y,0,data);
+	float h[10],d[10];
+	query.query(h,d,5);
+	cout << h[0] << ','<< d[0] << "   " << h[1] << ','<< d[1]<< endl;
     cout << "line 28" << endl;
 	ElevationAngle eleAngle(length, x, y, data);
 	eleAngle.FindPeakInCircle();
