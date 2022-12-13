@@ -33,7 +33,7 @@ class SettingsViewController: UIViewController {
     var peakValue: [LocationAnnotationNode] = []
     
         // Socket swift prams
-    let host = "10.5.48.27"
+    let host = "192.168.8.102"
     let port = 54000
     var client: TCPClient?
     var connected: Result!
@@ -56,18 +56,18 @@ class SettingsViewController: UIViewController {
         // Socket connection
         client = TCPClient(address: host, port: Int32(port))
         
-        connected = client!.connect(timeout: 10)
-//        switch connected {
-//            case .success:
-//                appendToTextField(string: "connect to server...")
-//                print("connected to socket")
-//            case .failure:
-//                appendToTextField(string: "fail to connected...")
-//                print("fail to connected")
-//            case .none:
-//                appendToTextField(string: "fail to connected - none")
-//                print("fail to connected - none")
-//        }
+        connected = client!.connect(timeout:10)
+        switch connected {
+            case .success:
+                appendToTextField(string: "connect to server...")
+                print("connected to socket")
+            case .failure:
+                appendToTextField(string: "connection failed...")
+                print("fail to connected")
+            case .none:
+                appendToTextField(string: "connection failed - none")
+                print("fail to connected - none")
+        }
         
         // test data transfer
 //        dataTransfer()
@@ -104,18 +104,17 @@ class SettingsViewController: UIViewController {
     
     @IBAction
     func connectSocket(){
+        refreshTextField()
         guard let client = client else { return }
         let data = get_all()
         print("Sensor data: ", data)
-//        print("try to connect")
         switch connected {
         case .success:
 //            print("socket connected")
-            print("Connected to host \(client.address)")
-            appendToTextField(string: "Connected to host \(client.address)")
-            print("Sending data...")
-            appendToTextField(string: "Sending data...")
-
+//            print("Connected to host \(client.address)")
+//            appendToTextField(string: "Connected to host \(client.address)")
+//            print("Sending data...")
+//            appendToTextField(string: "Sending data...")
             if let response = sendRequest(string: data, using: client) {
                 print(response)
                 dataTransfer(response: response)
@@ -124,6 +123,7 @@ class SettingsViewController: UIViewController {
             }
         case .failure(let error):
             print(String(describing: error))
+            appendToTextField(string: "Connection failed. Please try again...")
             //        client.close()
         case .none:
             print("connection failed - none")
@@ -332,17 +332,16 @@ extension MKLocalSearch.Response {
 extension SettingsViewController {
     private func sendRequest(string: String, using client: TCPClient) -> String? {
         
-//        appendToTextField(string: "Receiving data ... ")
         refreshControl.startAnimating()
         switch client.send(string: string) {
         case .success:
             refreshControl.stopAnimating()
-//            appendToTextField(string: "Finished!")
+            appendToTextField(string: "Sending data...")
             
             return readResponse(from: client)
             
         case .failure(let error):
-            appendToTextField(string: String(describing: error))
+//            appendToTextField(string: String(describing: error))
             print(String(describing: error))
             return nil
         }
@@ -350,7 +349,7 @@ extension SettingsViewController {
     }
     
     private func readResponse(from client: TCPClient) -> String? {
-        guard let response = client.read(30000*8, timeout: 10000) else { return nil }
+        guard let response = client.read(300000, timeout: -1) else { return nil }
         
         return String(bytes: response, encoding: .utf8)
     }
@@ -370,6 +369,9 @@ extension SettingsViewController {
     private func appendToTextField(string: String) {
 //        print(string)
         socketText.text = socketText.text.appending("\n\(string)")
+    }
+    private func refreshTextField(){
+        socketText.text = String("")
     }
     
     
@@ -393,8 +395,10 @@ extension SettingsViewController {
         return LocationAnnotationNode(location: location, view: label)
     }
     
+    
     func dataTransfer(response : String){
 //        response =
+        var nodes: [LocationAnnotationNode] = []
         let data = response.components(separatedBy: ",")
         let len = data.count
         let num_nodes = Int(len/3 - 1)
@@ -405,8 +409,9 @@ extension SettingsViewController {
             print("node: ", i, "latitude", latitude, "longitude:", longitude, "altitude:", altitude)
             
             let node = buildViewNode(latitude: latitude, longitude: longitude, altitude: altitude, text: "\(i)")
-            peakValue.append(node)
+            nodes.append(node)
         }
+        peakValue = nodes
         
     }
 }
