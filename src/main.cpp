@@ -168,15 +168,17 @@ void main()
 			// 	cout<< eleAngle.border_d_[i] << endl;
 			list <list<double>> result;	
 		
-			for (int i = 0; i < 49; i++){
-				float p_x = eleAngle.border_d_[i*7] * cos(i*7.0 / 180.0 * M_PI) + x;
+			for (int i = 0; i < 360; i++){
+				float p_x = eleAngle.border_d_[i] * cos(i*1.0 / 180.0 * M_PI) + x;
 				// cout << "cos: " << cos(i*7.0 / 180.0 * M_PI) << endl;
-				float p_y = eleAngle.border_d_[i*7] * sin(i*7.0 / 180.0 * M_PI) + y;
+				float p_y = eleAngle.border_d_[i] * sin(i*1.0 / 180.0 * M_PI) + y;
 				// cout << "sin: " << sin(i*7.0 / 180.0 * M_PI) << endl;
-				Struct1 gps = LV952GPS(p_x, p_y, eleAngle.border_h_[i*7]);
+				Struct1 gps = LV952GPS(p_x, p_y, eleAngle.border_h_[i]);
 				result.push_back({gps.lat, gps.lon, gps.alt});
 			}
 			cout<< "Convert to GPS Done" << endl;
+
+			// printNestedList(result);
 	// ----------------------------------------------server----------------------------------------
 			// // Echo message back to client
 			// send(clientSocket, buf, bytesReceived + 1, 0);
@@ -217,7 +219,7 @@ void main()
 
 			copy(message_list.begin(), message_list.end(), ostream_iterator<string>(stream, ","));
 			string message = stream.str();
-			//cout<< message << endl;
+			// cout<< message << endl;
 			cout<< "Generate Message Done" << endl;
 
 			send(clientSocket, message.c_str(), message.size() + 1, 0);
@@ -228,11 +230,12 @@ void main()
 		
 		}
 		closesocket(clientSocket);
+		// Cleanup winsock
+		WSACleanup();
 	}
 	
 
-	// Cleanup winsock
-	WSACleanup();
+	
 
 	system("pause");
 }
