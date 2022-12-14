@@ -108,10 +108,10 @@ void main()
 
 		// While loop: accept and echo message back to client
 		char buf[32768*10];
-
+		int TimesIReceivedData = 0;
 		while (true)
 		{	
-			int TimesIReceivedData = 0;
+			
 
 			ZeroMemory(buf, 32768*10);
 
@@ -233,7 +233,7 @@ void main()
 			
 			}
 			else {
-			continue;
+			break;
 		}
 		}
 		closesocket(clientSocket);
