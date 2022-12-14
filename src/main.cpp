@@ -147,6 +147,8 @@ void main()
 		Struct2 input = GPS2LV95(vect[1], vect[0]);
 		int x = input.E;
 		int y = input.N;
+		// cout << x << endl;
+		// cout << y << endl;
 
 		cout << "The message received from client: " << endl;
 		for (size_t i = 0; i < vect.size(); i++)
@@ -166,8 +168,10 @@ void main()
 		list <list<double>> result;	
 	
 		for (int i = 0; i < 49; i++){
-			float p_x = eleAngle.border_d_[i*7] * cos(i*7 / 180 * M_PI) + x;
-			float p_y = eleAngle.border_d_[i*7] * sin(i*7 / 180 * M_PI) + y;
+			float p_x = eleAngle.border_d_[i*7] * cos(i*7.0 / 180.0 * M_PI) + x;
+			// cout << "cos: " << cos(i*7.0 / 180.0 * M_PI) << endl;
+			float p_y = eleAngle.border_d_[i*7] * sin(i*7.0 / 180.0 * M_PI) + y;
+			// cout << "sin: " << sin(i*7.0 / 180.0 * M_PI) << endl;
 			Struct1 gps = LV952GPS(p_x, p_y, eleAngle.border_h_[i*7]);
 			result.push_back({gps.lat, gps.lon, gps.alt});
 		}
