@@ -475,7 +475,7 @@ extension POIViewController: LNTouchDelegate {
 			let coords = "\(node.location.coordinate.latitude.short)° \(node.location.coordinate.longitude.short)°"
 			let altitude = "\(node.location.altitude.short)m"
 			let tag = node.tag ?? ""
-			nodePositionLabel.text = " Annotation node at \(coords), \(altitude) - \(tag)"
+			nodePositionLabel.text = " This node at \(coords), \(altitude) - \(tag)"
 		}
     }
 

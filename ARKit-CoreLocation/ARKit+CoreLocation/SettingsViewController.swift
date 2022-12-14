@@ -33,10 +33,11 @@ class SettingsViewController: UIViewController {
     var peakValue: [LocationAnnotationNode] = []
     
         // Socket swift prams
-    let host = "192.168.8.102"
+    let host = "10.5.176.209"
     let port = 54000
     var client: TCPClient?
     var connected: Result!
+    var isDataSent: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,18 +57,18 @@ class SettingsViewController: UIViewController {
         // Socket connection
         client = TCPClient(address: host, port: Int32(port))
         
-        connected = client!.connect(timeout:10)
-        switch connected {
-            case .success:
-                appendToTextField(string: "connect to server...")
-                print("connected to socket")
-            case .failure:
-                appendToTextField(string: "connection failed...")
-                print("fail to connected")
-            case .none:
-                appendToTextField(string: "connection failed - none")
-                print("fail to connected - none")
-        }
+        connected = client!.connect(timeout:5)
+//        switch connected {
+//            case .success:
+//                appendToTextField(string: "connect to server...")
+//                print("connected to socket")
+//            case .failure:
+//                appendToTextField(string: "connection failed...")
+//                print("fail to connected")
+//            case .none:
+//                appendToTextField(string: "connection failed - none")
+//                print("fail to connected - none")
+//        }
         
         // test data transfer
 //        dataTransfer()
@@ -106,21 +107,21 @@ class SettingsViewController: UIViewController {
     func connectSocket(){
         refreshTextField()
         guard let client = client else { return }
-        let data = get_all()
-        print("Sensor data: ", data)
         switch connected {
         case .success:
-//            print("socket connected")
-//            print("Connected to host \(client.address)")
-//            appendToTextField(string: "Connected to host \(client.address)")
-//            print("Sending data...")
-//            appendToTextField(string: "Sending data...")
-            if let response = sendRequest(string: data, using: client) {
-                print(response)
-                dataTransfer(response: response)
-                print("Finished")
-                appendToTextField(string: "Finished")
-            }
+//                refreshControl.startAnimating()
+            appendToTextField(string: "Connected to server")
+//                while true{
+//                    if let response = readResponse(from: client){
+//                        dataTransfer(response: response)
+//                        refreshControl.stopAnimating()
+//                        break
+//                    }
+//                }
+//            if let response = sendRequest(string: data, using: client) {
+////                print(response)
+//                dataTransfer(response: response)
+//            }
         case .failure(let error):
             print(String(describing: error))
             appendToTextField(string: "Connection failed. Please try again...")
@@ -128,6 +129,36 @@ class SettingsViewController: UIViewController {
         case .none:
             print("connection failed - none")
         }
+    }
+    @IBAction
+    func receiveData(){
+        let data = get_all()
+        print("Sensor data: ", data)
+        appendToTextField(string: "Data Sent...")
+        guard let client = client else { return }
+        if let response = sendRequest(string: data, using: client) {
+            //                print(response)
+            dataTransfer(response: response)
+            
+        }
+    
+    }
+    
+    @IBAction
+    func refreshManul(){
+        refreshTextField()
+        peakValue = []
+        switch connected{
+        case .success:
+            print("no need to reconnect")
+            return
+        case.failure:
+            connected = client!.connect(timeout:5)
+        
+        case .none:
+            print("fail")
+        }
+//        isDataSent = false
     }
     
     
@@ -336,13 +367,13 @@ extension SettingsViewController {
         switch client.send(string: string) {
         case .success:
             refreshControl.stopAnimating()
-            appendToTextField(string: "Sending data...")
+//            appendToTextField(string: "Sending data...")
             
             return readResponse(from: client)
             
         case .failure(let error):
-//            appendToTextField(string: String(describing: error))
-            print(String(describing: error))
+            appendToTextField(string: String(describing: error))
+//            print(String(describing: error))
             return nil
         }
         
@@ -352,6 +383,20 @@ extension SettingsViewController {
         guard let response = client.read(300000, timeout: -1) else { return nil }
         
         return String(bytes: response, encoding: .utf8)
+    }
+    
+    
+    private func send(string: String, using client: TCPClient) -> Bool{
+        switch client.send(string: string) {
+        case .success:
+            appendToTextField(string: "Sending data...")
+            return true
+        case .failure(let error):
+            refreshControl.stopAnimating()
+            appendToTextField(string: "fail to send data")
+            appendToTextField(string: String(describing: error))
+            return false
+        }
     }
     
     
@@ -367,7 +412,6 @@ extension SettingsViewController {
         return string
     }
     private func appendToTextField(string: String) {
-//        print(string)
         socketText.text = socketText.text.appending("\n\(string)")
     }
     private func refreshTextField(){
@@ -386,7 +430,7 @@ extension SettingsViewController {
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         let location = CLLocation(coordinate: coordinate, altitude: altitude)
 //        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
         label.text = text
 //        label.backgroundColor = .green
         label.layer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
@@ -401,6 +445,7 @@ extension SettingsViewController {
         var nodes: [LocationAnnotationNode] = []
         let data = response.components(separatedBy: ",")
         let len = data.count
+        print("response data lens: " , len)
         let num_nodes = Int(len/3 - 1)
         for i in 0...num_nodes{
             let latitude = Double(data[i*3]) ?? 0
@@ -408,11 +453,12 @@ extension SettingsViewController {
             let altitude = Double(data[i*3+2]) ?? 0
             print("node: ", i, "latitude", latitude, "longitude:", longitude, "altitude:", altitude)
             
-            let node = buildViewNode(latitude: latitude, longitude: longitude, altitude: altitude, text: "\(i)")
+            let node = buildViewNode(latitude: latitude, longitude: longitude, altitude: altitude, text: "")
             nodes.append(node)
         }
         peakValue = nodes
-        
+        print("Finished")
+        appendToTextField(string: "Finished")
     }
 }
 
