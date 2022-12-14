@@ -42,6 +42,7 @@ void main()
 	// ----------------------------------------------server----------------------------------------
 	// Initialze winsock
 	while (true) {
+		WSACleanup();
 		WSADATA wsData;
 		WORD ver = MAKEWORD(2, 2);
 
@@ -218,8 +219,9 @@ void main()
 			ostringstream stream;
 
 			copy(message_list.begin(), message_list.end(), ostream_iterator<string>(stream, ","));
-			string message = stream.str();
-			// cout<< message << endl;
+			string message = stream.str() + "a";
+			
+			cout<< message << endl;
 			cout<< "Generate Message Done" << endl;
 
 			send(clientSocket, message.c_str(), message.size() + 1, 0);
