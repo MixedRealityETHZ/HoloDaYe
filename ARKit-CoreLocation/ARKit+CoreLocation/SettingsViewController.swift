@@ -33,6 +33,7 @@ class SettingsViewController: UIViewController {
     var peakValue: [LocationAnnotationNode] = []
     
         // Socket swift prams
+//    let host = "10.5.181.186"
     let host = "10.5.176.209"
     let port = 54000
     var client: TCPClient?
@@ -111,13 +112,11 @@ class SettingsViewController: UIViewController {
         case .success:
 //                refreshControl.startAnimating()
             appendToTextField(string: "Connected to server")
-//                while true{
-//                    if let response = readResponse(from: client){
-//                        dataTransfer(response: response)
-//                        refreshControl.stopAnimating()
-//                        break
-//                    }
-//                }
+            let data = get_all()
+            print("Sensor data: ", data)
+            if send(string: data, using: client){
+                appendToTextField(string: "Data Sent")
+            }
 //            if let response = sendRequest(string: data, using: client) {
 ////                print(response)
 //                dataTransfer(response: response)
@@ -132,29 +131,49 @@ class SettingsViewController: UIViewController {
     }
     @IBAction
     func receiveData(){
-        let data = get_all()
-        print("Sensor data: ", data)
-        appendToTextField(string: "Data Sent...")
         guard let client = client else { return }
-        if let response = sendRequest(string: data, using: client) {
-            //                print(response)
-            dataTransfer(response: response)
-            
+        let now = NSDate()
+        let  timeInterval: TimeInterval  = now.timeIntervalSince1970
+        let  timeStamp =  Int (timeInterval)
+//        if let response = sendRequest(string: data, using: client) {
+//            //                print(response)
+//            dataTransfer(response: response)
+//        }
+        var data: String = ""
+        while true{
+            if let response = readResponse(from: client){
+                data = data + response
+                if (data[data.index(data.endIndex, offsetBy: -2)]) == "a"{
+//                    print("get last")
+                    dataTransfer(response: String(data.dropLast()))
+                    break
+                }
+            }
+            let loop = NSDate()
+            let timeInterval_loop: TimeInterval  = loop.timeIntervalSince1970
+            let timeStamp_loop = Int(timeInterval_loop)
+//            print(timeStamp_loop - timeStamp)
+            if (timeStamp_loop - timeStamp) >= 30{
+                appendToTextField(string: "Time out, please connected to server first")
+                break
+            }
         }
     
     }
     
     @IBAction
     func refreshManul(){
+        client?.close()
         refreshTextField()
         peakValue = []
+        connected = client!.connect(timeout:5)
         switch connected{
         case .success:
-            print("no need to reconnect")
-            return
+            print("reconnected")
+            appendToTextField(string: "Reconnected")
         case.failure:
             connected = client!.connect(timeout:5)
-        
+
         case .none:
             print("fail")
         }
@@ -393,8 +412,9 @@ extension SettingsViewController {
             return true
         case .failure(let error):
             refreshControl.stopAnimating()
-            appendToTextField(string: "fail to send data")
-            appendToTextField(string: String(describing: error))
+            appendToTextField(string: "!!! Fail to send data, please refresh")
+//            appendToTextField(string: String(describing: error))
+            print(String(describing: error))
             return false
         }
     }
@@ -430,12 +450,12 @@ extension SettingsViewController {
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         let location = CLLocation(coordinate: coordinate, altitude: altitude)
 //        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
         label.text = text
 //        label.backgroundColor = .green
         label.layer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
         label.textAlignment = .center
-        label.layer.cornerRadius = 10
+        label.layer.cornerRadius = 5
         return LocationAnnotationNode(location: location, view: label)
     }
     

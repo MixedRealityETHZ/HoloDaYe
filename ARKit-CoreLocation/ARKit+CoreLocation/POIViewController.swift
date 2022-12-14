@@ -20,7 +20,6 @@ class POIViewController: UIViewController {
     @IBOutlet var mapView: MKMapView!
     @IBOutlet var infoLabel: UILabel!
     @IBOutlet weak var nodePositionLabel: UILabel!
-    @IBOutlet weak var HoloDaYe: UIButton!    //HoloDaYe
 
     @IBOutlet var contentView: UIView!
     let sceneLocationView = SceneLocationView()
@@ -91,7 +90,7 @@ class POIViewController: UIViewController {
 //        sceneLocationView.orientToTrueNorth = false
 //        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
 
-        sceneLocationView.showAxesNode = true
+        sceneLocationView.showAxesNode = false
         sceneLocationView.showFeaturePoints = displayDebugging
         sceneLocationView.locationNodeTouchDelegate = self
 //        sceneLocationView.delegate = self // Causes an assertionFailure - use the `arViewDelegate` instead:
