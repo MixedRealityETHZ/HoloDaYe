@@ -156,7 +156,7 @@ void main()
 				cout << setprecision(15) << vect[i] << endl;
 
 			float angle = 0;
-			int length = 100;
+			int length = 1;
 			// ElevationData *data = new ElevationData();
 			cout<< "Start Calculation" << endl;
 			ElevationData* data = new ElevationData();
@@ -168,10 +168,10 @@ void main()
 			// 	cout<< eleAngle.border_d_[i] << endl;
 			list <list<double>> result;	
 		
-			for (int i = 0; i < 360; i++){
-				float p_x = eleAngle.border_d_[i] * cos(i*1.0 / 180.0 * M_PI) + x;
+			for (int i = 0; i < 359; i++){
+				float p_x = eleAngle.border_d_[i] * cos(i / 180.0 * M_PI) + x;
 				// cout << "cos: " << cos(i*7.0 / 180.0 * M_PI) << endl;
-				float p_y = eleAngle.border_d_[i] * sin(i*1.0 / 180.0 * M_PI) + y;
+				float p_y = eleAngle.border_d_[i] * sin(i / 180.0 * M_PI) + y;
 				// cout << "sin: " << sin(i*7.0 / 180.0 * M_PI) << endl;
 				Struct1 gps = LV952GPS(p_x, p_y, eleAngle.border_h_[i]);
 				result.push_back({gps.lat, gps.lon, gps.alt});
