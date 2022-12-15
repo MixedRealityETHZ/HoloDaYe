@@ -35,6 +35,7 @@ class POIViewController: UIViewController {
     var peakValueMap: [MKPointAnnotation]?
     
     var peakValue: [LocationAnnotationNode]!
+    var selectPeakLayer: LocationNode?
 
     var showMap = false {
         didSet {
@@ -253,9 +254,13 @@ extension POIViewController: MKMapViewDelegate {
         } else {
             marker.displayPriority = .required
             marker.markerTintColor = UIColor(hue: 0.267, saturation: 0.67, brightness: 0.77, alpha: 1.0)
+            marker.glyphImage = UIImage(named: "peak4")
         }
 
         return marker
+    }
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        
     }
     
 }
@@ -466,6 +471,17 @@ extension POIViewController: LNTouchDelegate {
                 let gotoLocation = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
                 focusLocation(gotoLocation: gotoLocation)
             }
+            
+            if (selectPeakLayer != nil){
+//                sceneLocationView.removeLocationNode(locationNode: selectPeakLayer!)
+                let newnode = buildSmallNode(node:selectPeakLayer!)
+                sceneLocationView.removeLocationNode(locationNode: selectPeakLayer!)
+                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: newnode)
+            }
+//            selectPeakLayer = buildBigNode(node: node)
+            sceneLocationView.removeLocationNode(locationNode: node)
+            selectPeakLayer = buildLayer(node: node)
+            sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: selectPeakLayer!)
 		}
     }
 
@@ -520,5 +536,44 @@ extension POIViewController{
             self.mapView.region.span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         })
         centerMapOnUserLocation = false
+    }
+    
+    func buildLayer(node: LocationNode) -> LocationNode{
+        
+            
+        let selectPeakLayer = CATextLayer()
+        selectPeakLayer.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        selectPeakLayer.cornerRadius = 20
+        selectPeakLayer.fontSize = 10
+        selectPeakLayer.alignmentMode = .center
+        selectPeakLayer.foregroundColor = UIColor.white.cgColor
+        selectPeakLayer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        selectPeakLayer.string = "\n🗻"
+        
+//        _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+//            selectPeakLayer.string = "Here"
+//        }
+        
+        let selectPeak = buildLayerNode(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude, altitude: node.location.altitude, layer: selectPeakLayer)
+        return selectPeak
+    }
+    
+    func buildBigNode(node:LocationNode) -> LocationNode{
+        let coordinate = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
+        let location = CLLocation(coordinate: coordinate, altitude: node.location.altitude)
+//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        label.layer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        label.layer.cornerRadius = 15
+        return LocationAnnotationNode(location: location, view: label)
+    }
+    func buildSmallNode(node:LocationNode) -> LocationNode{
+        let coordinate = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
+        let location = CLLocation(coordinate: coordinate, altitude: node.location.altitude)
+//        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        label.layer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        label.layer.cornerRadius = 5
+        return LocationAnnotationNode(location: location, view: label)
     }
 }

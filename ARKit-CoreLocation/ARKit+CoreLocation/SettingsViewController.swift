@@ -35,9 +35,9 @@ class SettingsViewController: UIViewController {
     var peakValueMap: [MKPointAnnotation] = []
     
         // Socket swift prams
-//    let host = "10.5.181.186"
+    let host = "10.5.188.33"
 //    let host = "10.5.176.209"
-    let host = "192.168.8.102"
+//    let host = "192.168.8.102"
     let port = 54000
     var client: TCPClient?
     var connected: Result!
@@ -62,17 +62,17 @@ class SettingsViewController: UIViewController {
         client = TCPClient(address: host, port: Int32(port))
         
         connected = client!.connect(timeout:5)
-//        switch connected {
-//            case .success:
-//                appendToTextField(string: "connect to server...")
-//                print("connected to socket")
-//            case .failure:
-//                appendToTextField(string: "connection failed...")
-//                print("fail to connected")
-//            case .none:
-//                appendToTextField(string: "connection failed - none")
-//                print("fail to connected - none")
-//        }
+        switch connected {
+            case .success:
+            appendToTextField(string: "Connected to server")
+                print("connected to socket")
+            case .failure:
+                appendToTextField(string: "connection failed...")
+                print("fail to connected")
+            case .none:
+                appendToTextField(string: "connection failed - none")
+                print("fail to connected - none")
+        }
         
         // test data transfer
 //        dataTransfer()
@@ -107,6 +107,11 @@ class SettingsViewController: UIViewController {
         searchForLocation()
     }
     
+//    @IBAction
+//    func printAction(){
+//        appendToTextField(string: "Calculating...")
+//    }
+    
     @IBAction
     func connectSocket(){
         refreshTextField()
@@ -114,11 +119,11 @@ class SettingsViewController: UIViewController {
         switch connected {
         case .success:
 //                refreshControl.startAnimating()
-            appendToTextField(string: "Connected to server")
             let data = get_all()
             print("Sensor data: ", data)
             if send(string: data, using: client){
                 appendToTextField(string: "Data Sent")
+                appendToTextField(string: "Calculating...")
             }
 //            if let response = sendRequest(string: data, using: client) {
 ////                print(response)
@@ -156,8 +161,8 @@ class SettingsViewController: UIViewController {
             let timeInterval_loop: TimeInterval  = loop.timeIntervalSince1970
             let timeStamp_loop = Int(timeInterval_loop)
 //            print(timeStamp_loop - timeStamp)
-            if (timeStamp_loop - timeStamp) >= 30{
-                appendToTextField(string: "Time out, please connected to server first")
+            if (timeStamp_loop - timeStamp) >= 40{
+                appendToTextField(string: "Time out, please refresh")
                 break
             }
         }
@@ -173,10 +178,11 @@ class SettingsViewController: UIViewController {
         connected = client!.connect(timeout:5)
         switch connected{
         case .success:
-            print("reconnected")
+            print("ready")
             appendToTextField(string: "Reconnected")
         case.failure:
             connected = client!.connect(timeout:5)
+            appendToTextField(string: "Fail to Refresh")
 
         case .none:
             print("fail")
