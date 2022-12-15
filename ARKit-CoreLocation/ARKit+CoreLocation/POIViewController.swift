@@ -36,6 +36,7 @@ class POIViewController: UIViewController {
     
     var peakValue: [LocationAnnotationNode]!
     var selectPeakLayer: LocationNode?
+    var selectMapPoint: LocationNode?
 
     var showMap = false {
         didSet {
@@ -84,8 +85,8 @@ class POIViewController: UIViewController {
 
         // Set to true to display an arrow which points north.
         // Checkout the comments in the property description and on the readme on this.
-//        sceneLocationView.orientToTrueNorth = false
-//        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
+        sceneLocationView.orientToTrueNorth = true
+        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
 
         sceneLocationView.showAxesNode = false
         sceneLocationView.showFeaturePoints = displayDebugging
@@ -171,62 +172,6 @@ class POIViewController: UIViewController {
             }
         }
     }
-    
-//    @IBAction func sendButtonAction() {
-//        guard let client = client else { return }
-//        let data = get_all()
-//        print("Sensor data: ", data)
-////        print("try to connect")
-//        switch connected {
-//        case .success:
-//            print("socket connected")
-////            appendToTextField(string: "Connected to host \(client.address)")
-//
-//            if let response = sendRequest(string: data, using: client) {
-//                print("Response: \(response)")
-//                //                  appendToTextField(string: "Response: \(response)")
-//            }
-//        case .failure(let error):
-//            print(String(describing: error))
-//            //        client.close()
-//        case .none:
-//            print("connection failed - none")
-//        }
-//    }
-      
-//      private func sendRequest(string: String, using client: TCPClient) -> String? {
-////        appendToTextField(string: "Sending data ... ")
-//        
-//        switch client.send(string: string) {
-//        case .success:
-//          return readResponse(from: client)
-//        case .failure(let error):
-////          appendToTextField(string: String(describing: error))
-//            print(String(describing: error))
-//          return nil
-//        }
-//      }
-//      
-//      private func readResponse(from client: TCPClient) -> String? {
-//        guard let response = client.read(1024*10, timeout: 10) else { return nil }
-//        
-//        return String(bytes: response, encoding: .utf8)
-//      }
-//      
-//    
-//    func get_all() -> String{
-//        let latitude = sceneLocationView.sceneLocationManager.currentLocation?.coordinate.latitude ?? 0
-//        let longitude = sceneLocationView.sceneLocationManager.currentLocation?.coordinate.longitude ?? 0
-//
-//        
-//        let list = [latitude.description, longitude.description]
-////        print(list)
-//        let string = list.joined(separator: ",")
-////        print(string)
-//        return string
-//    }
-
-
 }
 
 // MARK: - MKMapViewDelegate
@@ -259,7 +204,9 @@ extension POIViewController: MKMapViewDelegate {
 
         return marker
     }
-    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+    func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
+        let pointAnnotation = annotation as? MKPointAnnotation
+        searchForNode(latitude: (pointAnnotation?.coordinate.latitude)!, longitude: (pointAnnotation?.coordinate.longitude)!)
         
     }
     
@@ -287,27 +234,27 @@ extension POIViewController {
         box.firstMaterial?.diffuse.contents = UIColor.gray.withAlphaComponent(0.5)
 
         // 2. If there is a route, show that
-        if let routes = routes {
-            sceneLocationView.addRoutes(routes: routes) { distance -> SCNBox in
-                let box = SCNBox(width: 1.75, height: 0.5, length: distance, chamferRadius: 0.25)
-
-//                // Option 1: An absolutely terrible box material set (that demonstrates what you can do):
-//                box.materials = ["box0", "box1", "box2", "box3", "box4", "box5"].map {
-//                    let material = SCNMaterial()
-//                    material.diffuse.contents = UIImage(named: $0)
-//                    return material
-//                }
-
-                // Option 2: Something more typical
-                box.firstMaterial?.diffuse.contents = UIColor.blue.withAlphaComponent(0.7)
-                return box
-            }
-        } else {
+//        if let routes = routes {
+//            sceneLocationView.addRoutes(routes: routes) { distance -> SCNBox in
+//                let box = SCNBox(width: 1.75, height: 0.5, length: distance, chamferRadius: 0.25)
+//
+////                // Option 1: An absolutely terrible box material set (that demonstrates what you can do):
+////                box.materials = ["box0", "box1", "box2", "box3", "box4", "box5"].map {
+////                    let material = SCNMaterial()
+////                    material.diffuse.contents = UIImage(named: $0)
+////                    return material
+////                }
+//
+//                // Option 2: Something more typical
+//                box.firstMaterial?.diffuse.contents = UIColor.blue.withAlphaComponent(0.7)
+//                return box
+//            }
+//        } else {
             // 3. If not, then show the
-            buildDemoData().forEach {
-                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: $0)
-            }
+        buildDemoData().forEach {
+            sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: $0)
         }
+//        }
 
         // There are many different ways to add lighting to a scene, but even this mechanism (the absolute simplest)
         // keeps 3D objects fron looking flat
@@ -417,7 +364,7 @@ extension POIViewController {
             infoLabel.text!.append(" \(hour.short):\(minute.short):\(second.short):\(nanosecond.short3) • \(nodeCount)")
         }
     }
-
+    //MARK: build node
     func buildNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees,
                    altitude: CLLocationDistance, imageName: String) -> LocationAnnotationNode {
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -425,8 +372,6 @@ extension POIViewController {
         let image = UIImage(named: imageName)!
         return LocationAnnotationNode(location: location, image: image)
     }
-    
-    //TODO: 可视化
     func buildViewNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees,
                        altitude: CLLocationDistance, text: String) -> LocationAnnotationNode {
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -472,15 +417,16 @@ extension POIViewController: LNTouchDelegate {
                 focusLocation(gotoLocation: gotoLocation)
             }
             
-            if (selectPeakLayer != nil){
-//                sceneLocationView.removeLocationNode(locationNode: selectPeakLayer!)
-                let newnode = buildSmallNode(node:selectPeakLayer!)
-                sceneLocationView.removeLocationNode(locationNode: selectPeakLayer!)
-                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: newnode)
+            if(selectPeakLayer != nil){
+                replaceNode(node: selectPeakLayer!)
+            }
+            if(selectMapPoint != nil){
+                replaceNode(node: selectMapPoint!)
             }
 //            selectPeakLayer = buildBigNode(node: node)
             sceneLocationView.removeLocationNode(locationNode: node)
-            selectPeakLayer = buildLayer(node: node)
+//            selectPeakLayer = buildLayer(node: node)
+            selectPeakLayer = buildImageNode(node: node, imageName: "peak5")
             sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: selectPeakLayer!)
 		}
     }
@@ -516,6 +462,7 @@ extension UIView {
     
 }
 
+//MARK: Utilities
 @available(iOS 11.0, *)
 extension POIViewController{
     func focusLocation(gotoLocation: CLLocationCoordinate2D) {
@@ -550,9 +497,21 @@ extension POIViewController{
         selectPeakLayer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
         selectPeakLayer.string = "\n🗻"
         
-//        _ = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-//            selectPeakLayer.string = "Here"
-//        }
+        let selectPeak = buildLayerNode(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude, altitude: node.location.altitude, layer: selectPeakLayer)
+        return selectPeak
+    }
+    
+    func buildStarLayer(node: LocationNode) -> LocationNode{
+        
+            
+        let selectPeakLayer = CATextLayer()
+        selectPeakLayer.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        selectPeakLayer.cornerRadius = 20
+        selectPeakLayer.fontSize = 10
+        selectPeakLayer.alignmentMode = .center
+        selectPeakLayer.foregroundColor = UIColor.white.cgColor
+        selectPeakLayer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        selectPeakLayer.string = "\n⭐️"
         
         let selectPeak = buildLayerNode(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude, altitude: node.location.altitude, layer: selectPeakLayer)
         return selectPeak
@@ -562,7 +521,7 @@ extension POIViewController{
         let coordinate = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
         let location = CLLocation(coordinate: coordinate, altitude: node.location.altitude)
 //        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
         label.layer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
         label.layer.cornerRadius = 15
         return LocationAnnotationNode(location: location, view: label)
@@ -576,4 +535,70 @@ extension POIViewController{
         label.layer.cornerRadius = 5
         return LocationAnnotationNode(location: location, view: label)
     }
+    
+    // find a node closest to the selected map point
+    func searchForNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
+        for peakNode in peakValue{
+            if peakNode.location.coordinate.latitude == latitude && peakNode.location.coordinate.longitude == longitude{
+                if(selectPeakLayer != nil){
+                    replaceNode(node: selectPeakLayer!)
+                }
+                if(selectMapPoint != nil){
+                    replaceNode(node: selectMapPoint!)
+                }
+                selectMapPoint = buildImageNode(node: peakNode, imageName: "peak5")
+                sceneLocationView.removeLocationNode(locationNode: peakNode)
+                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: selectMapPoint!)
+                updatePositionLabel(node: selectMapPoint!)
+            }
+        }
+        return
+        
+    }
+    // return last selected node to normal small node
+    func replaceNode(node:LocationNode){
+        let newnode = buildSmallNode(node: node)
+        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: newnode)
+        sceneLocationView.removeLocationNode(locationNode: node)
+    }
+    
+    func updatePositionLabel(node:LocationNode){
+        let coords = "\(node.location.coordinate.latitude.short)° \(node.location.coordinate.longitude.short)°"
+        let altitude = "\(node.location.altitude.short)m"
+        let tag = node.tag ?? ""
+        nodePositionLabel.text = " This node at \(coords), \(altitude) - \(tag)"
+    }
+    func buildImageNode(node:LocationNode, imageName:String) -> LocationNode{
+        let coordinate = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
+        let location = CLLocation(coordinate: coordinate, altitude: node.location.altitude)
+        let image = resizeImage(image: UIImage(named: imageName)!, targetSize: CGSizeMake(40, 40))
+        return LocationAnnotationNode(location: location, image: image ?? UIImage(named: imageName)!)
+    }
+    
+    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage? {
+        let size = image.size
+        
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        
+        // Figure out what our orientation is, and use that to form the rectangle
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio, height: size.height * widthRatio)
+        }
+        
+        // This is the rect that we've calculated out and this is what is actually used below
+        let rect = CGRect(origin: .zero, size: newSize)
+        
+        // Actually do the resizing to the rect using the ImageContext stuff
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
+    
 }
