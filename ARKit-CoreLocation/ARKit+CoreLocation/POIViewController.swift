@@ -34,7 +34,7 @@ class POIViewController: UIViewController {
     var routes: [MKRoute]?
     var peakValueMap: [MKPointAnnotation]?
     
-    var peakValue: [LocationAnnotationNode]!
+    var peakValue: [LocationNode]!
     var selectPeakLayer: LocationNode?
     var selectMapPoint: LocationNode?
 
@@ -50,9 +50,9 @@ class POIViewController: UIViewController {
     /// Whether to display some debugging data
     /// This currently displays the coordinate of the best location estimate
     /// The initial value is respected
-    let displayDebugging = false
+    let displayDebugging = true
 
-    let adjustNorthByTappingSidesOfScreen = false
+    let adjustNorthByTappingSidesOfScreen = true
     let addNodeByTappingScreen = false
 
     class func loadFromStoryboard() -> POIViewController {
@@ -85,7 +85,7 @@ class POIViewController: UIViewController {
 
         // Set to true to display an arrow which points north.
         // Checkout the comments in the property description and on the readme on this.
-        sceneLocationView.orientToTrueNorth = true
+        sceneLocationView.orientToTrueNorth = false
         sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
 
         sceneLocationView.showAxesNode = false
@@ -210,6 +210,7 @@ extension POIViewController: MKMapViewDelegate {
         
     }
     
+    
 }
 
 
@@ -265,8 +266,8 @@ extension POIViewController {
     /// Builds the location annotations for a few random objects, scattered across the country
     ///
     /// - Returns: an array of annotation nodes.
-    func buildDemoData() -> [LocationAnnotationNode] {
-        let nodes: [LocationAnnotationNode] = peakValue
+    func buildDemoData() -> [LocationNode] {
+        let nodes: [LocationNode] = peakValue
 //        var nodes: [LocationAnnotationNode] = []
 //
 //        let pikesPeakLayer = CATextLayer()
@@ -415,19 +416,29 @@ extension POIViewController: LNTouchDelegate {
             if showMap{
                 let gotoLocation = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
                 focusLocation(gotoLocation: gotoLocation)
+//                let mapPoint = MKPointAnnotation()
+//                mapPoint.coordinate = gotoLocation
+//                mapView.selectAnnotation(mapPoint, animated: true)
+                mapView.selectedAnnotations = []
             }
             
             if(selectPeakLayer != nil){
-                replaceNode(node: selectPeakLayer!)
+                    replaceNode(node: selectPeakLayer!)
             }
             if(selectMapPoint != nil){
-                replaceNode(node: selectMapPoint!)
+                if node.location.coordinate.longitude == selectMapPoint?.location.coordinate.longitude && node.location.coordinate.latitude == selectMapPoint?.location.coordinate.latitude{
+                    sceneLocationView.removeLocationNode(locationNode: selectMapPoint!)
+                }
+                else{
+                    replaceNode(node: selectMapPoint!)
+                }
             }
 //            selectPeakLayer = buildBigNode(node: node)
             sceneLocationView.removeLocationNode(locationNode: node)
 //            selectPeakLayer = buildLayer(node: node)
             selectPeakLayer = buildImageNode(node: node, imageName: "peak5")
             sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: selectPeakLayer!)
+//            peakValue.append(selectPeakLayer!)
 		}
     }
 
@@ -494,7 +505,7 @@ extension POIViewController{
         selectPeakLayer.fontSize = 10
         selectPeakLayer.alignmentMode = .center
         selectPeakLayer.foregroundColor = UIColor.white.cgColor
-        selectPeakLayer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        selectPeakLayer.backgroundColor = UIColor(red: 51/255, green: 86/255, blue: 155/255, alpha: 1.0).cgColor
         selectPeakLayer.string = "\n🗻"
         
         let selectPeak = buildLayerNode(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude, altitude: node.location.altitude, layer: selectPeakLayer)
@@ -510,9 +521,8 @@ extension POIViewController{
         selectPeakLayer.fontSize = 10
         selectPeakLayer.alignmentMode = .center
         selectPeakLayer.foregroundColor = UIColor.white.cgColor
-        selectPeakLayer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        selectPeakLayer.backgroundColor = UIColor(red: 51/255, green: 86/255, blue: 155/255, alpha: 1.0).cgColor
         selectPeakLayer.string = "\n⭐️"
-        
         let selectPeak = buildLayerNode(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude, altitude: node.location.altitude, layer: selectPeakLayer)
         return selectPeak
     }
@@ -522,7 +532,7 @@ extension POIViewController{
         let location = CLLocation(coordinate: coordinate, altitude: node.location.altitude)
 //        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-        label.layer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        label.layer.backgroundColor = UIColor(red: 51/255, green: 86/255, blue: 155/255, alpha: 1.0).cgColor
         label.layer.cornerRadius = 15
         return LocationAnnotationNode(location: location, view: label)
     }
@@ -531,23 +541,33 @@ extension POIViewController{
         let location = CLLocation(coordinate: coordinate, altitude: node.location.altitude)
 //        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-        label.layer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        label.layer.backgroundColor = UIColor(red: 51/255, green: 86/255, blue: 155/255, alpha: 1.0).cgColor
         label.layer.cornerRadius = 5
         return LocationAnnotationNode(location: location, view: label)
     }
     
     // find a node closest to the selected map point
     func searchForNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
-        for peakNode in peakValue{
+        for peakNode in sceneLocationView.locationNodes{
             if peakNode.location.coordinate.latitude == latitude && peakNode.location.coordinate.longitude == longitude{
                 if(selectPeakLayer != nil){
-                    replaceNode(node: selectPeakLayer!)
+                    if peakNode.location.coordinate.longitude == selectPeakLayer?.location.coordinate.longitude && peakNode.location.coordinate.latitude == selectPeakLayer?.location.coordinate.latitude{
+                        sceneLocationView.removeLocationNode(locationNode: selectPeakLayer!)
+                    }
+                    else{
+                        replaceNode(node: selectPeakLayer!)
+                    }
                 }
                 if(selectMapPoint != nil){
-                    replaceNode(node: selectMapPoint!)
+                    if peakNode.location.coordinate.longitude == selectMapPoint?.location.coordinate.longitude && peakNode.location.coordinate.latitude == selectMapPoint?.location.coordinate.latitude{
+                        sceneLocationView.removeLocationNode(locationNode: selectMapPoint!)
+                    }
+                    else{
+                        replaceNode(node: selectMapPoint!)
+                    }
                 }
-                selectMapPoint = buildImageNode(node: peakNode, imageName: "peak5")
                 sceneLocationView.removeLocationNode(locationNode: peakNode)
+                selectMapPoint = buildImageNode(node: peakNode, imageName: "peak5")
                 sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: selectMapPoint!)
                 updatePositionLabel(node: selectMapPoint!)
             }
@@ -558,8 +578,9 @@ extension POIViewController{
     // return last selected node to normal small node
     func replaceNode(node:LocationNode){
         let newnode = buildSmallNode(node: node)
-        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: newnode)
         sceneLocationView.removeLocationNode(locationNode: node)
+        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: newnode)
+        
     }
     
     func updatePositionLabel(node:LocationNode){
@@ -572,6 +593,7 @@ extension POIViewController{
         let coordinate = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
         let location = CLLocation(coordinate: coordinate, altitude: node.location.altitude)
         let image = resizeImage(image: UIImage(named: imageName)!, targetSize: CGSizeMake(40, 40))
+        
         return LocationAnnotationNode(location: location, image: image ?? UIImage(named: imageName)!)
     }
     

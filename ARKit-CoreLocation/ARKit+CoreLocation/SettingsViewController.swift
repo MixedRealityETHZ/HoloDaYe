@@ -67,7 +67,7 @@ class SettingsViewController: UIViewController {
             appendToTextField(string: "Connected to server")
                 print("connected to socket")
             case .failure:
-                appendToTextField(string: "connection failed...")
+                appendToTextField(string: "Connection failed. Please refresh...")
                 print("fail to connected")
             case .none:
                 appendToTextField(string: "connection failed - none")
@@ -131,7 +131,7 @@ class SettingsViewController: UIViewController {
 //            }
         case .failure(let error):
             print(String(describing: error))
-            appendToTextField(string: "Connection failed. Please try again...")
+            appendToTextField(string: "Connection failed. Please refresh...")
             //        client.close()
         case .none:
             print("connection failed - none")
@@ -140,33 +140,38 @@ class SettingsViewController: UIViewController {
     @IBAction
     func receiveData(){
         guard let client = client else { return }
-        let now = NSDate()
-        let  timeInterval: TimeInterval  = now.timeIntervalSince1970
-        let  timeStamp =  Int (timeInterval)
-//        if let response = sendRequest(string: data, using: client) {
-//            //                print(response)
-//            dataTransfer(response: response)
-//        }
-        var data: String = ""
-        while true{
-            if let response = readResponse(from: client){
-                data = data + response
-                if (data[data.index(data.endIndex, offsetBy: -2)]) == "a"{
-//                    print("get last")
-                    dataTransfer(response: String(data.dropLast()))
+        switch connected!{
+        case .success:
+            let now = NSDate()
+            let  timeInterval: TimeInterval  = now.timeIntervalSince1970
+            let  timeStamp =  Int (timeInterval)
+            //        if let response = sendRequest(string: data, using: client) {
+            //            //                print(response)
+            //            dataTransfer(response: response)
+            //        }
+            var data: String = ""
+            while true{
+                if let response = readResponse(from: client){
+                    data = data + response
+                    if (data[data.index(data.endIndex, offsetBy: -2)]) == "a"{
+                        //                    print("get last")
+                        dataTransfer(response: String(data.dropLast()))
+                        break
+                    }
+                }
+                let loop = NSDate()
+                let timeInterval_loop: TimeInterval  = loop.timeIntervalSince1970
+                let timeStamp_loop = Int(timeInterval_loop)
+                //            print(timeStamp_loop - timeStamp)
+                if (timeStamp_loop - timeStamp) >= 40{
+                    appendToTextField(string: "Time out, please refresh")
                     break
                 }
             }
-            let loop = NSDate()
-            let timeInterval_loop: TimeInterval  = loop.timeIntervalSince1970
-            let timeStamp_loop = Int(timeInterval_loop)
-//            print(timeStamp_loop - timeStamp)
-            if (timeStamp_loop - timeStamp) >= 40{
-                appendToTextField(string: "Time out, please refresh")
-                break
-            }
-        }
     
+        case .failure:
+            return
+        }
     }
     
     @IBAction
@@ -176,16 +181,13 @@ class SettingsViewController: UIViewController {
         peakValue = []
         peakValueMap =  []
         connected = client!.connect(timeout:5)
-        switch connected{
+        switch connected!{
         case .success:
             print("ready")
             appendToTextField(string: "Reconnected")
         case.failure:
             connected = client!.connect(timeout:5)
             appendToTextField(string: "Fail to Refresh")
-
-        case .none:
-            print("fail")
         }
 //        isDataSent = false
     }
@@ -463,7 +465,7 @@ extension SettingsViewController {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
         label.text = text
 //        label.backgroundColor = .green
-        label.layer.backgroundColor = UIColor(red: 0/255, green: 159/255, blue: 184/255, alpha: 1.0).cgColor
+        label.layer.backgroundColor = UIColor(red: 51/255, green: 86/255, blue: 155/255, alpha: 1.0).cgColor
         label.textAlignment = .center
         label.layer.cornerRadius = 5
         return LocationAnnotationNode(location: location, view: label)
