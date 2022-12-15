@@ -31,10 +31,13 @@ class SettingsViewController: UIViewController {
     
 //    var response = "47.3499395,8.4911947,870.0,47.37070605629712,8.452770723847408,300.0"
     var peakValue: [LocationAnnotationNode] = []
+    var testNode :MKPointAnnotation?
+    var peakValueMap: [MKPointAnnotation] = []
     
         // Socket swift prams
 //    let host = "10.5.181.186"
-    let host = "10.5.176.209"
+//    let host = "10.5.176.209"
+    let host = "192.168.8.102"
     let port = 54000
     var client: TCPClient?
     var connected: Result!
@@ -166,6 +169,7 @@ class SettingsViewController: UIViewController {
         client?.close()
         refreshTextField()
         peakValue = []
+        peakValueMap =  []
         connected = client!.connect(timeout:5)
         switch connected{
         case .success:
@@ -458,11 +462,20 @@ extension SettingsViewController {
         label.layer.cornerRadius = 5
         return LocationAnnotationNode(location: location, view: label)
     }
+    func buildMapNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees,
+                      text: String) -> MKPointAnnotation{
+        let mapNode = MKPointAnnotation()
+        mapNode.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        mapNode.title = text
+        return mapNode
+        
+    }
     
     
     func dataTransfer(response : String){
 //        response =
         var nodes: [LocationAnnotationNode] = []
+        var mapNodes: [MKPointAnnotation] = []
         let data = response.components(separatedBy: ",")
         let len = data.count
         print("response data lens: " , len)
@@ -474,9 +487,15 @@ extension SettingsViewController {
             print("node: ", i, "latitude", latitude, "longitude:", longitude, "altitude:", altitude)
             
             let node = buildViewNode(latitude: latitude, longitude: longitude, altitude: altitude, text: "")
+            let mapNode = buildMapNode(latitude: latitude, longitude: longitude, text: "")
             nodes.append(node)
+            mapNodes.append(mapNode)
         }
         peakValue = nodes
+        peakValueMap = mapNodes
+//        let testNode = MKPointAnnotation()
+//        testNode.coordinate = CLLocationCoordinate2D(latitude: 47.413702, longitude: 8.402363)
+//        peakValueMap = [testNode]
         print("Finished")
         appendToTextField(string: "Finished")
     }

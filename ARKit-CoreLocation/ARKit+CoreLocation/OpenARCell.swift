@@ -20,6 +20,7 @@ class OpenARCell: UITableViewCell {
             return assertionFailure("Failed to create ARVC")
         }
         vc.peakValue = parentVC?.peakValue
+        vc.peakValueMap  = parentVC?.peakValueMap
         parentVC?.navigationController?.pushViewController(vc, animated: true)
     }
 

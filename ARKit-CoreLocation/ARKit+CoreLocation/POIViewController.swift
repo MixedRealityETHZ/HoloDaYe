@@ -32,6 +32,7 @@ class POIViewController: UIViewController {
 
     var centerMapOnUserLocation: Bool = true
     var routes: [MKRoute]?
+    var peakValueMap: [MKPointAnnotation]?
     
     var peakValue: [LocationAnnotationNode]!
 
@@ -57,12 +58,7 @@ class POIViewController: UIViewController {
             .instantiateViewController(withIdentifier: "ARCLViewController") as! POIViewController
         // swiftlint:disable:previous force_cast
     }
-    
-//    // Socket swift prams
-//    let host = "10.5.191.143"
-//    let port = 54000
-//    var client: TCPClient?
-//    var connected: Result!
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,25 +102,15 @@ class POIViewController: UIViewController {
         mapView.isHidden = !showMap
 
         if showMap {
-			updateUserLocationTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-				self?.updateUserLocation()
-			}
-
-//            routes?.forEach { mapView.addOverlay($0.polyline) }
+            updateUserLocationTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+                self?.updateUserLocation()
+            }
+            
+            
+            //            routes?.forEach { mapView.addOverlay($0.polyline) }
+            peakValueMap?.forEach{ mapView.addAnnotation($0) }
         }
         
-//        // Socket connection
-//        client = TCPClient(address: host, port: Int32(port))
-//        
-//        connected = client!.connect(timeout: 10)
-//        switch connected {
-//            case .success:
-//                print("connected to socket")
-//            case .failure:
-//                print("fail to connected")
-//            case .none:
-//                print("fail to connected - none")
-//        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -267,11 +253,11 @@ extension POIViewController: MKMapViewDelegate {
         } else {
             marker.displayPriority = .required
             marker.markerTintColor = UIColor(hue: 0.267, saturation: 0.67, brightness: 0.77, alpha: 1.0)
-            marker.glyphImage = UIImage(named: "compass")
         }
 
         return marker
     }
+    
 }
 
 
@@ -475,6 +461,11 @@ extension POIViewController: LNTouchDelegate {
 			let altitude = "\(node.location.altitude.short)m"
 			let tag = node.tag ?? ""
 			nodePositionLabel.text = " This node at \(coords), \(altitude) - \(tag)"
+            
+            if showMap{
+                let gotoLocation = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
+                focusLocation(gotoLocation: gotoLocation)
+            }
 		}
     }
 
@@ -507,4 +498,27 @@ extension UIView {
         return recursiveSubviews
     }
     
+}
+
+@available(iOS 11.0, *)
+extension POIViewController{
+    func focusLocation(gotoLocation: CLLocationCoordinate2D) {
+//        let rangeInMeters: Double = 5000   // <-- adjust as desired
+//        let coordinateRegion = MKCoordinateRegion.init(center: gotoLocation,
+//                                                       latitudinalMeters: rangeInMeters,
+//                                                       longitudinalMeters: rangeInMeters)
+//        mapView.setRegion(coordinateRegion, animated: true)
+//        let mapNode = MKPointAnnotation()
+//        mapNode.coordinate = gotoLocation
+//        mapView.addAnnotation(mapNode)
+        UIView.animate(withDuration: 0.45,
+                       delay: 0,
+                       options: .allowUserInteraction,
+                       animations: {
+                        self.mapView.setCenter(gotoLocation, animated: false)
+        }, completion: { _ in
+            self.mapView.region.span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        })
+        centerMapOnUserLocation = false
+    }
 }

@@ -141,7 +141,7 @@
                                     <action selector="tappedSearch:" destination="4lj-wh-bN2" eventType="touchUpInside" id="HYq-bU-6jx"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ly-ve-tpP">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3ly-ve-tpP">
                                 <rect key="frame" x="402.5" y="175" width="89" height="35"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Connect"/>
@@ -157,7 +157,7 @@
                                     <action selector="connectSocket" destination="4lj-wh-bN2" eventType="touchUpInside" id="uMX-q4-xgQ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uvT-BN-qSi">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uvT-BN-qSi">
                                 <rect key="frame" x="548.5" y="175.5" width="97.5" height="34.5"/>
                                 <buttonConfiguration key="configuration" style="plain" title="HoloDaYe"/>
                                 <userDefinedRuntimeAttributes>
