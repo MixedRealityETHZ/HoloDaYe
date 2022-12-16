@@ -1,6 +1,7 @@
 #include <holodaye/elevation.h>
 #include <holodaye/utils.h>
 #include <iostream>
+#include <climits>
 
 int main(){
     #ifdef _WIN32
