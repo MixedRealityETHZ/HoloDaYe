@@ -8,7 +8,7 @@
 
 import UIKit
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 class OpenARCell: UITableViewCell {
 
     weak var parentVC: SettingsViewController?

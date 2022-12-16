@@ -9,7 +9,7 @@
 import ARKit
 import UIKit
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension POIViewController: ARSCNViewDelegate {
 
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {

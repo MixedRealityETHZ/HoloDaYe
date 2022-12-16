@@ -14,7 +14,7 @@ import ARCL
 
 
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 class SettingsViewController: UIViewController {
 
     @IBOutlet weak var showMapSwitch: UISwitch!
@@ -26,6 +26,7 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var socketText: UITextView!
     @IBOutlet weak var refreshControl: UIActivityIndicatorView!
 
+    @IBOutlet weak var search: UIButton!
     var locationManager = CLLocationManager()
 
     var mapSearchResults: [MKMapItem]?
@@ -46,6 +47,10 @@ class SettingsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //hide some views
+        addressText.isHidden = true
+        search.isHidden = true
 
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.distanceFilter = kCLDistanceFilterNone
@@ -198,7 +203,7 @@ class SettingsViewController: UIViewController {
 
 // MARK: - UITextFieldDelegate
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension SettingsViewController: UITextFieldDelegate {
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -216,7 +221,7 @@ extension SettingsViewController: UITextFieldDelegate {
 
 // MARK: - DataSource
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension SettingsViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -261,7 +266,7 @@ extension SettingsViewController: UITableViewDataSource {
 
 // MARK: - UITableViewDelegate
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension SettingsViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -276,7 +281,7 @@ extension SettingsViewController: UITableViewDelegate {
 
 // MARK: - CLLocationManagerDelegate
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension SettingsViewController: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -286,7 +291,7 @@ extension SettingsViewController: CLLocationManagerDelegate {
 
 // MARK: - Implementation
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension SettingsViewController {
 
     func createARVC() -> POIViewController {
@@ -395,7 +400,7 @@ extension MKLocalSearch.Response {
 }
 
 //MARK: Socket data transfer
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension SettingsViewController {
     private func sendRequest(string: String, using client: TCPClient) -> String? {
         
@@ -459,7 +464,7 @@ extension SettingsViewController {
 }
 
     
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension SettingsViewController {
         //TODO: 可视化
     func buildViewNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees,

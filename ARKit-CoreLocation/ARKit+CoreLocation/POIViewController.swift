@@ -14,7 +14,7 @@ import UIKit
 import CoreLocation
 import SwiftSocket
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 /// Displays Points of Interest in ARCL
 class POIViewController: UIViewController {
     @IBOutlet var mapView: MKMapView!
@@ -37,6 +37,9 @@ class POIViewController: UIViewController {
     var peakValue: [LocationNode]!
     var selectPeakLayer: LocationNode?
     var selectMapPoint: LocationNode?
+    
+    // for search on map
+    var placeMark: CLPlacemark!
 
     var showMap = false {
         didSet {
@@ -182,7 +185,7 @@ class POIViewController: UIViewController {
 
 // MARK: - MKMapViewDelegate
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension POIViewController: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -222,7 +225,7 @@ extension POIViewController: MKMapViewDelegate {
 
 // MARK: - Implementation
 
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension POIViewController {
 
     /// Adds the appropriate ARKit models to the scene.  Note: that this won't
@@ -409,14 +412,15 @@ extension POIViewController {
 //}
 
 // MARK: - LNTouchDelegate
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension POIViewController: LNTouchDelegate {
 
     func annotationNodeTouched(node: AnnotationNode) {
 		if let node = node.parent as? LocationNode {
 			let coords = "\(node.location.coordinate.latitude.short)° \(node.location.coordinate.longitude.short)°"
 			let altitude = "\(node.location.altitude.short)m"
-			let tag = node.tag ?? ""
+            let tag = searchMap(locationNode: node) ?? ""
+//			let tag = node.tag ?? ""
 			nodePositionLabel.text = " This node at \(coords), \(altitude) - \(tag)"
             
             if showMap{
@@ -435,6 +439,8 @@ extension POIViewController: LNTouchDelegate {
                         }
                     }
                     mapView.addAnnotation(mapPoint)
+//                    mapView.selectAnnotation(mapPoint, animated: true)
+                    
                 }
             }
             
@@ -495,7 +501,7 @@ extension UIView {
 }
 
 //MARK: Utilities
-@available(iOS 11.0, *)
+@available(iOS 15.0, *)
 extension POIViewController{
     func focusLocation(gotoLocation: CLLocationCoordinate2D) {
 //        let rangeInMeters: Double = 5000   // <-- adjust as desired
@@ -607,7 +613,7 @@ extension POIViewController{
     func updatePositionLabel(node:LocationNode){
         let coords = "\(node.location.coordinate.latitude.short)° \(node.location.coordinate.longitude.short)°"
         let altitude = "\(node.location.altitude.short)m"
-        let tag = node.tag ?? ""
+        let tag = searchMap(locationNode: node) ?? ""
         nodePositionLabel.text = " This node at \(coords), \(altitude) - \(tag)"
     }
     func buildImageNode(node:LocationNode, imageName:String) -> LocationNode{
@@ -642,6 +648,38 @@ extension POIViewController{
         UIGraphicsEndImageContext()
         
         return newImage
+    }
+    
+    func searchMap(locationNode: LocationNode) -> String?{
+        let geoCoder = CLGeocoder()
+        let location = locationNode.location
+        geoCoder.reverseGeocodeLocation(location!) { (placeMarkers, error) -> Void in
+            self.placeMark = placeMarkers?[0]
+        }
+//
+        if placeMark != nil{
+            print(placeMark.addressDictionary)
+            var name: String
+            if (placeMark.addressDictionary!["Name"] != nil){
+                name = placeMark.addressDictionary!["Name"] as! String
+            }
+            else{
+                name = placeMark.addressDictionary!["Street"] as! String
+            }
+            
+            let zip = placeMark.addressDictionary?["ZIP"] as! String
+            let state = placeMark.addressDictionary?["State"] as! String
+            let contry = placeMark.addressDictionary?["CountryCode"] as! String
+            if name == zip{
+                name = "Unrecogenized Street Name"
+            }
+            let place: [String] = [name, zip, state, contry]
+            let result = place.joined(separator: ", ")
+            print("Result", result)
+            return result
+        }
+        else{return nil}
+        
     }
     
 }
