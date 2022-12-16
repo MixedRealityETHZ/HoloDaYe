@@ -20,6 +20,7 @@ class SettingsViewController: UIViewController {
     @IBOutlet weak var showMapSwitch: UISwitch!
     @IBOutlet weak var northCalibration: UISwitch!
 //    @IBOutlet weak var showRouteDirections: UISwitch!
+    @IBOutlet weak var showAllPeaks: UISwitch!
     @IBOutlet weak var addressText: UITextField!
     @IBOutlet weak var searchResultTable: UITableView!
     @IBOutlet weak var socketText: UITextView!
@@ -293,6 +294,7 @@ extension SettingsViewController {
         arclVC.showMap = showMapSwitch.isOn
         arclVC.northClibration = northCalibration.isOn
         arclVC.adjustNorthByTappingSidesOfScreen = northCalibration.isOn
+        arclVC.showAllPeaks = showAllPeaks.isOn
 
         return arclVC
     }

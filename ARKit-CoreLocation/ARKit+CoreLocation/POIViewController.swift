@@ -48,6 +48,7 @@ class POIViewController: UIViewController {
     }
     
     var northClibration: Bool!
+    var showAllPeaks: Bool!
 
     /// Whether to display some debugging data
     /// This currently displays the coordinate of the best location estimate
@@ -112,7 +113,10 @@ class POIViewController: UIViewController {
             
             
             //            routes?.forEach { mapView.addOverlay($0.polyline) }
-            peakValueMap?.forEach{ mapView.addAnnotation($0) }
+            if showAllPeaks{
+                peakValueMap?.forEach{ mapView.addAnnotation($0) }
+            }
+            
         }
         
     }
@@ -422,10 +426,25 @@ extension POIViewController: LNTouchDelegate {
 //                mapPoint.coordinate = gotoLocation
 //                mapView.selectAnnotation(mapPoint, animated: true)
                 mapView.selectedAnnotations = []
+                if !showAllPeaks{
+                    let mapPoint = MKPointAnnotation()
+                    mapPoint.coordinate = gotoLocation
+                    for annotation_ in mapView.annotations{
+                        if annotation_.coordinate.latitude == gotoLocation.latitude && annotation_.coordinate.longitude == gotoLocation.longitude{
+                            mapView.removeAnnotation(annotation_)
+                        }
+                    }
+                    mapView.addAnnotation(mapPoint)
+                }
             }
             
             if(selectPeakLayer != nil){
+                if node.location.coordinate.longitude == selectPeakLayer?.location.coordinate.longitude && node.location.coordinate.latitude == selectPeakLayer?.location.coordinate.latitude{
+                    sceneLocationView.removeLocationNode(locationNode: selectPeakLayer!)
+                }
+                else{
                     replaceNode(node: selectPeakLayer!)
+                }
             }
             if(selectMapPoint != nil){
                 if node.location.coordinate.longitude == selectMapPoint?.location.coordinate.longitude && node.location.coordinate.latitude == selectMapPoint?.location.coordinate.latitude{
