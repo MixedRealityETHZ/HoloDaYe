@@ -40,6 +40,9 @@ void main()
 	// cout << "longitude is:" << gps.lon << " and latitude is " << gps.lat;
 
 	// ----------------------------------------------server----------------------------------------
+	cout<< "Reading Data" << endl;
+	ElevationData* data = new ElevationData();
+	cout<< "Finish reading" << endl;
 	// Initialze winsock
 	while (true) {
 		WSACleanup();
@@ -161,7 +164,7 @@ void main()
 				int length = 1;
 				// ElevationData *data = new ElevationData();
 				cout<< "Start Calculation" << endl;
-				ElevationData* data = new ElevationData();
+				
 				ElevationAngle eleAngle(length, x, y, data);
 				eleAngle.FindPeakInCircle();
 				
@@ -242,7 +245,7 @@ void main()
 	}
 	
 
-	
+	delete[] data;
 
 	system("pause");
 }
