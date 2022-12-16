@@ -46,13 +46,15 @@ class POIViewController: UIViewController {
             mapView.isHidden = !showMap
         }
     }
+    
+    var northClibration: Bool!
 
     /// Whether to display some debugging data
     /// This currently displays the coordinate of the best location estimate
     /// The initial value is respected
-    let displayDebugging = true
+    let displayDebugging = false
 
-    let adjustNorthByTappingSidesOfScreen = true
+    var adjustNorthByTappingSidesOfScreen: Bool!
     let addNodeByTappingScreen = false
 
     class func loadFromStoryboard() -> POIViewController {
@@ -85,8 +87,8 @@ class POIViewController: UIViewController {
 
         // Set to true to display an arrow which points north.
         // Checkout the comments in the property description and on the readme on this.
-        sceneLocationView.orientToTrueNorth = false
-        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
+        sceneLocationView.orientToTrueNorth = !northClibration
+//        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
 
         sceneLocationView.showAxesNode = false
         sceneLocationView.showFeaturePoints = displayDebugging

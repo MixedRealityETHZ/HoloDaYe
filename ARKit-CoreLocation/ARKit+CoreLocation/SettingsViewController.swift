@@ -18,7 +18,7 @@ import ARCL
 class SettingsViewController: UIViewController {
 
     @IBOutlet weak var showMapSwitch: UISwitch!
-    @IBOutlet weak var showPointsOfInterest: UISwitch!
+    @IBOutlet weak var northCalibration: UISwitch!
 //    @IBOutlet weak var showRouteDirections: UISwitch!
     @IBOutlet weak var addressText: UITextField!
     @IBOutlet weak var searchResultTable: UITableView!
@@ -73,7 +73,7 @@ class SettingsViewController: UIViewController {
                 appendToTextField(string: "connection failed - none")
                 print("fail to connected - none")
         }
-        
+        northCalibration.isOn = false
         // test data transfer
 //        dataTransfer()
 //        print("Peakvalue in Setting", peakValue as Any)
@@ -223,37 +223,38 @@ extension SettingsViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if showPointsOfInterest.isOn {
-            return 1
-        }
-        guard let mapSearchResults = mapSearchResults else {
-            return 0
-        }
-
-        return mapSearchResults.count
+        return 1
+//        if showPointsOfInterest.isOn {
+//            return 1
+//        }
+//        guard let mapSearchResults = mapSearchResults else {
+//            return 0
+//        }
+//
+//        return mapSearchResults.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if showPointsOfInterest.isOn {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "OpenARCell", for: indexPath)
-            guard let openARCell = cell as? OpenARCell else {
-                return cell
-            }
-            openARCell.parentVC = self
-
-            return openARCell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "LocationCell", for: indexPath)
-            guard let mapSearchResults = mapSearchResults,
-                indexPath.row < mapSearchResults.count,
-                let locationCell = cell as? LocationCell else {
-                return cell
-            }
-            locationCell.locationManager = locationManager
-            locationCell.mapItem = mapSearchResults[indexPath.row]
-
-            return locationCell
+//        if showPointsOfInterest.isOn {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "OpenARCell", for: indexPath)
+        guard let openARCell = cell as? OpenARCell else {
+            return cell
         }
+        openARCell.parentVC = self
+
+        return openARCell
+//        } else {
+//            let cell = tableView.dequeueReusableCell(withIdentifier: "LocationCell", for: indexPath)
+//            guard let mapSearchResults = mapSearchResults,
+//                indexPath.row < mapSearchResults.count,
+//                let locationCell = cell as? LocationCell else {
+//                return cell
+//            }
+//            locationCell.locationManager = locationManager
+//            locationCell.mapItem = mapSearchResults[indexPath.row]
+//
+//            return locationCell
+//        }
     }
 }
 
@@ -290,6 +291,8 @@ extension SettingsViewController {
     func createARVC() -> POIViewController {
         let arclVC = POIViewController.loadFromStoryboard()
         arclVC.showMap = showMapSwitch.isOn
+        arclVC.northClibration = northCalibration.isOn
+        arclVC.adjustNorthByTappingSidesOfScreen = northCalibration.isOn
 
         return arclVC
     }
