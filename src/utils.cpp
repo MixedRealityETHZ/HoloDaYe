@@ -10,6 +10,7 @@
 #include <iterator>
 using namespace std;
 
+Struct1 LV952GPS(int E, int N){return LV952GPS(E,N,0);}
 
 Struct1 LV952GPS(int E, int N, double H) {
     Struct1 gps;
@@ -26,6 +27,7 @@ Struct1 LV952GPS(int E, int N, double H) {
     return gps;
     }
 
+Struct2 GPS2LV95(double lon, double lat) {return GPS2LV95(lon, lat, 0);}
 
 Struct2 GPS2LV95(double lon, double lat, double alt) {
     
