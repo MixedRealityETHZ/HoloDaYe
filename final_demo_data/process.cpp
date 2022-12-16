@@ -1,6 +1,7 @@
 #include <holodaye/elevation.h>
 #include <holodaye/utils.h>
 #include <iostream>
+#include <climits>
 
 int main(){
     FILE *in_file = fopen("../../../final_demo_data/result_ml.txt", "r");
