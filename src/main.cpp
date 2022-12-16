@@ -118,70 +118,70 @@ void main()
 
 			ZeroMemory(buf, 32768*10);
 
-			if (TimesIReceivedData == 0) {
-				// Wait for client to send data
-				int bytesReceived = recv(clientSocket, buf, 4096, 0);
-				if (bytesReceived == SOCKET_ERROR)
-				{
-					cerr << "Error in recv(). Quitting" << endl;
-					//continue;
-					break;
-				}
-
-				if (bytesReceived == 0)
-				{
-					cout << "Client disconnected " << endl;
-					break;
-					//continue;
-				}
-
-				string received = string(buf, 0, bytesReceived);
-				// cout << received << endl;
-
-				// Read the data from cliend and process the data
-				vector<double> vect;
-
-				stringstream ss(received);
-
-				for (double i; ss >> i;) {
-					vect.push_back(i);
-					if (ss.peek() == ',')
-						ss.ignore();
-				}
-
-				// [lat, lon]
-				Struct2 input = GPS2LV95(vect[1], vect[0]);
-				int x = input.E;
-				int y = input.N;
-				// cout << x << endl;
-				// cout << y << endl;
-
-				cout << "The message received from client: " << endl;
-				for (size_t i = 0; i < vect.size(); i++)
-					cout << setprecision(15) << vect[i] << endl;
-
-				float angle = 0;
-				int length = 1;
-				// ElevationData *data = new ElevationData();
-				cout<< "Start Calculation" << endl;
-				
-				ElevationAngle eleAngle(length, x, y, data);
-				eleAngle.FindPeakInCircle();
-				
-				cout<< "Calculation Done" << endl;
-				// for(int i=0; i<360; i++)
-				// 	cout<< eleAngle.border_d_[i] << endl;
-				list <list<double>> result;	
 			
-				for (int i = 0; i < 359; i++){
-					float p_x = eleAngle.border_d_[i] * cos(i / 180.0 * M_PI) + x;
-					// cout << "cos: " << cos(i*7.0 / 180.0 * M_PI) << endl;
-					float p_y = eleAngle.border_d_[i] * sin(i / 180.0 * M_PI) + y;
-					// cout << "sin: " << sin(i*7.0 / 180.0 * M_PI) << endl;
-					Struct1 gps = LV952GPS(p_x, p_y, eleAngle.border_h_[i]);
-					result.push_back({gps.lat, gps.lon, gps.alt});
-				}
-				cout<< "Convert to GPS Done" << endl;
+			// Wait for client to send data
+			int bytesReceived = recv(clientSocket, buf, 4096, 0);
+			if (bytesReceived == SOCKET_ERROR)
+			{
+				cerr << "Error in recv(). Quitting" << endl;
+				//continue;
+				break;
+			}
+
+			if (bytesReceived == 0)
+			{
+				cout << "Client disconnected " << endl;
+				break;
+				//continue;
+			}
+
+			string received = string(buf, 0, bytesReceived);
+			// cout << received << endl;
+
+			// Read the data from cliend and process the data
+			vector<double> vect;
+
+			stringstream ss(received);
+
+			for (double i; ss >> i;) {
+				vect.push_back(i);
+				if (ss.peek() == ',')
+					ss.ignore();
+			}
+
+			// [lat, lon]
+			Struct2 input = GPS2LV95(vect[1], vect[0]);
+			int x = input.E;
+			int y = input.N;
+			// cout << x << endl;
+			// cout << y << endl;
+
+			cout << "The message received from client: " << endl;
+			for (size_t i = 0; i < vect.size(); i++)
+				cout << setprecision(15) << vect[i] << endl;
+
+			float angle = 0;
+			int length = 1;
+			// ElevationData *data = new ElevationData();
+			cout<< "Start Calculation" << endl;
+			
+			ElevationAngle eleAngle(length, x, y, data);
+			eleAngle.FindPeakInCircle();
+			
+			cout<< "Calculation Done" << endl;
+			// for(int i=0; i<360; i++)
+			// 	cout<< eleAngle.border_d_[i] << endl;
+			list <list<double>> result;	
+		
+			for (int i = 0; i < 359; i++){
+				float p_x = eleAngle.border_d_[i] * cos(i / 180.0 * M_PI) + x;
+				// cout << "cos: " << cos(i*7.0 / 180.0 * M_PI) << endl;
+				float p_y = eleAngle.border_d_[i] * sin(i / 180.0 * M_PI) + y;
+				// cout << "sin: " << sin(i*7.0 / 180.0 * M_PI) << endl;
+				Struct1 gps = LV952GPS(p_x, p_y, eleAngle.border_h_[i]);
+				result.push_back({gps.lat, gps.lon, gps.alt});
+			}
+			cout<< "Convert to GPS Done" << endl;
 
 				// printNestedList(result);
 		// ----------------------------------------------server----------------------------------------
@@ -208,36 +208,31 @@ void main()
 
 
 				// Convert the result to string stream and send back to client
-				list<string> message_list;
-				
-				for (auto& outer : result)
-				{
-					for (auto& inner : outer)
-					{
-						stringstream ss;
-						ss << fixed << setprecision(15) << inner;
-						message_list.push_back(ss.str());
-					}
-				}
-
-				ostringstream stream;
-
-				copy(message_list.begin(), message_list.end(), ostream_iterator<string>(stream, ","));
-				string message = stream.str() + "a";
-				
-				cout<< message << endl;
-				cout<< "Generate Message Done" << endl;
-
-				send(clientSocket, message.c_str(), message.size() + 1, 0);
-				cout<< "Message is sent to client" << endl;
-
-				// Close the socket
-				TimesIReceivedData += 1;
+			list<string> message_list;
 			
+			for (auto& outer : result)
+			{
+				for (auto& inner : outer)
+				{
+					stringstream ss;
+					ss << fixed << setprecision(15) << inner;
+					message_list.push_back(ss.str());
+				}
 			}
-			else {
-			break;
-		}
+
+			ostringstream stream;
+
+			copy(message_list.begin(), message_list.end(), ostream_iterator<string>(stream, ","));
+			string message = stream.str() + "a";
+			
+			cout<< message << endl;
+			cout<< "Generate Message Done" << endl;
+
+			send(clientSocket, message.c_str(), message.size() + 1, 0);
+			cout<< "Message is sent to client" << endl;
+
+			// Close the socket
+		
 		}
 		closesocket(clientSocket);
 		// Cleanup winsock
