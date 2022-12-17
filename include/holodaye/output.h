@@ -5,7 +5,7 @@ const float MAX_HEIGHT = 5000; // max elevation in Swizerland
 
 class ElevationAngle{
 public:
-    ElevationAngle(int length, float x, float y, float z, ElevationData* data);
+    ElevationAngle(int length, float x, float y, ElevationData* data);
     ~ElevationAngle() {delete[] border_h_, border_d_, max_slope_;};
     // Fill border_h_, border_d_, and max_slope_ every 1 degree from (angle - PI/2) to (angle + PI/2)
     void FindPeakInCircle();

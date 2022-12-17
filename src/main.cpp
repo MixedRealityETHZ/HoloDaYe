@@ -162,15 +162,16 @@ void main()
 				cout << setprecision(15) << vect[i] << endl;
 
 			float angle = 0;
-			int length = 100;
+			int length = 1;
 			// ElevationData *data = new ElevationData();
 			cout<< "Start Calculation" << endl;
-			ElevationAngle eleAngle(length, x, y, z, data);
+			// ElevationAngle eleAngle(length, x, y, z, data);
+			ElevationAngle eleAngle(length, x, y, data);
 			eleAngle.FindPeakInCircle();
 			
 			cout<< "Calculation Done" << endl;
 			// for(int i=0; i<360; i++)
-			// 	cout<< eleAngle.border_d_[i] << endl;
+			cout<< eleAngle.border_d_ << endl;
 			list <list<double>> result;	
 		
 			for (int i = 0; i < 359; i++){
