@@ -150,9 +150,10 @@ void main()
 			}
 
 			// [lat, lon]
-			Struct2 input = GPS2LV95(vect[1], vect[0]);
+			Struct2 input = GPS2LV95(vect[1], vect[0], vect[2]);
 			int x = input.E;
 			int y = input.N;
+			int z = input.H;
 			// cout << x << endl;
 			// cout << y << endl;
 
@@ -161,10 +162,10 @@ void main()
 				cout << setprecision(15) << vect[i] << endl;
 
 			float angle = 0;
-			int length = 1;
+			int length = 100;
 			// ElevationData *data = new ElevationData();
 			cout<< "Start Calculation" << endl;
-			ElevationAngle eleAngle(length, x, y, data);
+			ElevationAngle eleAngle(length, x, y, z, data);
 			eleAngle.FindPeakInCircle();
 			
 			cout<< "Calculation Done" << endl;
