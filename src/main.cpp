@@ -179,7 +179,8 @@ void main()
 					float p_y = eleAngle.border_d_[i] * sin(i / 180.0 * M_PI) + y;
 					// cout << "sin: " << sin(i*7.0 / 180.0 * M_PI) << endl;
 					Struct1 gps = LV952GPS(p_x, p_y, eleAngle.border_h_[i]);
-					result.push_back({gps.lat, gps.lon, gps.alt});
+					// result.push_back({gps.lat, gps.lon, gps.alt});
+					result.push_back({gps.lat, gps.lon, eleAngle.border_h_[i]});
 				}
 				cout<< "Convert to GPS Done" << endl;
 
@@ -232,7 +233,7 @@ void main()
 				cout<< "Message is sent to client" << endl;
 
 				// Close the socket
-				TimesIReceivedData += 1;
+				// TimesIReceivedData += 1;
 			
 			}
 			else {
