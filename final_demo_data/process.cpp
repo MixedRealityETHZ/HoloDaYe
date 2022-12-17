@@ -1,15 +1,21 @@
 #include <holodaye/elevation.h>
 #include <holodaye/utils.h>
 #include <iostream>
+#include <climits>
 
 int main(){
+    #ifdef _WIN32
     FILE *in_file = fopen("../../../final_demo_data/result_ml.txt", "r");
+    FILE *out_file = fopen("../../../final_demo_data/grid.csv", "w");
+    #elif defined(__unix__)
+    FILE *in_file = fopen("../../final_demo_data/result_ml.txt", "r");
+    FILE *out_file = fopen("../../final_demo_data/grid.csv", "w");
+    #endif
     if(in_file == NULL){
         printf("Error! Input file not found!\n");   
         exit(1);             
     }
     std::cout << "Input file found" << std::endl;
-    FILE *out_file = fopen("../../../final_demo_data/grid.csv", "w");
     std::cout << "Output file 1 found" << std::endl;
     int x[360],y[360];
     double h[360];
@@ -45,7 +51,11 @@ int main(){
     for (int i=0; i<mat_side_len; i++){
         grid[i] = new float[mat_side_len];
     }
+    #ifdef _WIN32
     ElevationData data("../../../data/zipped.dat");
+    #elif defined(__unix__)
+    ElevationData data("../../data/zipped.dat");
+    #endif
     std::cout<< "Data read" << std::endl;
     for (int i=0; i<mat_side_len; i++)
         for (int j=0; j<mat_side_len; j++){
@@ -58,7 +68,11 @@ int main(){
         fprintf(out_file, "%lf\n",grid[i][mat_side_len-1]);
     }
     fclose(out_file);
+    #ifdef _WIN32
     out_file = fopen("../../../final_demo_data/peek.csv", "w");
+    #elif defined(__unix__)
+    out_file = fopen("../../final_demo_data/peek.csv", "w");
+    #endif
     for(int i=0; i<360; i++){
             fprintf(out_file, "%lf,%lf,%lf\n",
                 double(x[i] - mid_x + half_side_len)/side_len*mat_side_len,

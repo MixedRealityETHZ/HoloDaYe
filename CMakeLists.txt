@@ -27,6 +27,13 @@ add_executable(holodaye
 # Generating data for final demo
 add_subdirectory(final_demo_data)
 
+# Check the altitude of the uetliberg
+add_executable(uetliberg
+    src/dataset.cpp
+    src/utils.cpp
+    test/uetliberg.cpp
+)
+
 # All codes below are in the purpose of testing.
 # Test with catch2
 add_subdirectory(ext/Catch2)

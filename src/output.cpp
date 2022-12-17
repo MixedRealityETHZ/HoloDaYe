@@ -5,10 +5,11 @@
 #include <math.h>
 #include <vector>
 
-ElevationAngle::ElevationAngle(int length, float x, float y, ElevationData* data): length_(length), x_(x), y_(y), ElevData_(data) {
+ElevationAngle::ElevationAngle(int length, float x, float y, float z,  ElevationData* data): length_(length), x_(x), y_(y), ElevData_(data) {
     border_h_ = new float[360];  // record the height with maximum slope in 360 directions
     border_d_ = new float[360];  // record the height with maximum slope in 360 directions
     max_slope_ = new float[360]; // record the maximum slope in 360 directions
+    cur_z_ = z; 
 };
 
 void ElevationAngle::FindPeakInCircle(){
@@ -34,7 +35,7 @@ void ElevationAngle::GetMaxSlope(float angle, int index) {
     bool is_continue = true;   
     ElevationQuery elev_query(x_, y_, angle, ElevData_);     
     elev_query.query(h, d, 1); // query #data = length_
-    cur_z_ = h[0];
+    //cur_z_ = h[0];
 
     float max_border_h = 0;
     float max_border_d = 0;
