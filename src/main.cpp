@@ -153,7 +153,7 @@ void main()
 			Struct2 input = GPS2LV95(vect[1], vect[0], vect[2]);
 			int x = input.E;
 			int y = input.N;
-			int z = input.H;
+			double z = input.H;
 			// cout << x << endl;
 			// cout << y << endl;
 
