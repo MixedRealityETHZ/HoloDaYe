@@ -4,6 +4,7 @@ class ElevationData{
 public:
     // default initialization
     ElevationData();
+    ElevationData(char* filename);
     // default destructor
     ~ElevationData();
     // Check whether this is a fake data or a real one.

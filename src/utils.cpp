@@ -10,7 +10,7 @@
 #include <iterator>
 using namespace std;
 
-
+Struct1 LV952GPS(int E, int N){return LV952GPS(E,N,0);}
 Struct1 LV952GPS(int E, int N, double H) {
     Struct1 gps;
     double E_ = ((double)E - 2600000) / 1000000;
@@ -26,8 +26,9 @@ Struct1 LV952GPS(int E, int N, double H) {
     return gps;
     }
 
+Struct2 GPS2LV95(double lon, double lat) {return GPS2LV95(lon, lat, 0);}
 
-Struct2 GPS2LV95(double lon, double lat) {
+Struct2 GPS2LV95(double lon, double lat, double alt) {
     
     Struct2 lv95;
     // unit is second
@@ -37,7 +38,8 @@ Struct2 GPS2LV95(double lon, double lat) {
     double E_ = 2600072.37 + 211455.93 * lon_ - 10938.51 * (lon_ * lat_) - 0.36 * (SQUARE(lat_) * lon_) - 44.54 * (TRIPPLE(lon_));
     double N_ = 1200147.07 + 308807.95 * lat_ + 3745.25 * SQUARE(lon_) + 76.63 * (SQUARE(lat_)) - 194.56 * (SQUARE(lon_) * lat_) + 119.79 * (TRIPPLE(lat_));
     
-    //H = alt - 49.55 + 2.73 * lon_ + 6.94 * lat_;
+    lv95.H = alt - 49.55 + 2.73 * lon_ + 6.94 * lat_;
+
     lv95.E = ROUND_2_INT(E_);
     lv95.N = ROUND_2_INT(N_);
    
