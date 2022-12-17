@@ -24,6 +24,9 @@ add_executable(holodaye
     src/output.cpp
     src/utils.cpp)
 
+# Generating data for final demo
+add_subdirectory(final_demo_data)
+
 # All codes below are in the purpose of testing.
 # Test with catch2
 add_subdirectory(ext/Catch2)

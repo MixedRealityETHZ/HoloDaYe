@@ -7,5 +7,6 @@ CMakeFiles
 Makefile
 .idea
 /data
-/out
-/.vs
+*.csv
+.vs/
+out/
