@@ -17,6 +17,10 @@ Inspired by the project nori2 from the lecture computer graphics, I decide to us
 |```data\```|scripts to generate data set|Limited Tracked|
 |```landscape_demo\```|demo to show the elevation data|Matlab|
 
+## Demonstration
+you can download some demonstrations of the project with the following link:
+https://drive.google.com/file/d/1SR0iJv06M0FsZnBvHHSCBlNEyIDEVwKG/view?usp=share_link
+
 ## Before running
 ### About data set
 Since this repository contains no data, you need to first download the preprocessed data set from [google drive](https://drive.google.com/file/d/1VEH-fl9MNWkXczAR74fiCL-5GnzCDdr6/view?usp=sharing)(recommended) into ```data\``` or to preprocess the data set from scratch according to the description in ```data\readme.md```
@@ -32,4 +36,7 @@ Our server is built on the Windows 11/10 and client is on the MacOS. The change 
 - Make sure the client and server are connected to the same network
 - Make sure the client and server share the same ip address and port number
 - If you want to use the north calibration, please let the mobile devie roughly facing the north direction during computation.
+
+## How to run the code
+- 
 
