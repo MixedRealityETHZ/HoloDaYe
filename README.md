@@ -34,18 +34,18 @@ Our server is built on the Windows 11/10 and client is on the MacOS. The change 
 
 ## Check List (before running the code)
 - We use cmake to compile the code, please make sure you have the compiler with required version on your local machine before running the code
-- Make sure the client and server are connected to the same network
-- Make sure the client and server share the same ip address and port number
+- Make sure the client and server are connected to the same network (check ```scr\main.cpp for server ```and ```...``` for client)
+- Make sure the client and server share the same ip address and port number (check ```scr\main.cpp for server ``` and ```...``` for client)
 - If you want to use the north calibration, please let the mobile devie roughly facing the north direction during computation.
 
 ## Running the code
 ### How to start the server
-''' 
+```
 cd HoloDaYe 
 mkdir build
 cd build
 cmake ..
-''' 
+```
 You will find the file in name of holodaye.exe when you compile the code successfully
 Start the exe file and it will automatically open the terminal (start of the server)
 
