@@ -47,7 +47,7 @@ cd build
 cmake ..
 ```
 You will find the file in name of holodaye.exe when you compile the code successfully
-Start the exe file and it will automatically open the terminal (start of the server)
+Start the exe file and it will automatically open a terminal (start of the server)
 
-### How to start the client
+### How to build the application (client)
 
