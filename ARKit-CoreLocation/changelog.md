@@ -1,0 +1,40 @@
+# Changelog
+- 1.3.1
+- 1.3.0
+   - [PR #255 - Fix minor error with placement of route steps](https://github.com/ProjectDent/ARKit-CoreLocation/pull/255)
+   - [PR #249 - Fix Memory Leak](https://github.com/ProjectDent/ARKit-CoreLocation/pull/249)
+   - [PR #244 - Improve geodesy calculations and test coverage](https://github.com/ProjectDent/ARKit-CoreLocation/pull/244)
+   - [PR #240 - Fix build error, update compiler checks](https://github.com/ProjectDent/ARKit-CoreLocation/pull/240)
+   - [PR #232 - Add new demo app to exercise node types and scene parameters](https://github.com/ProjectDent/ARKit-CoreLocation/pull/232)
+   - [PR #230 - Expose an adjustment factor for label annotation height](https://github.com/ProjectDent/ARKit-CoreLocation/pull/230)
+   - [PR #225 - Expose SceneLocationView.locationOfLocationNode ](https://github.com/ProjectDent/ARKit-CoreLocation/pull/225)
+   - [PR #222 - Trigger viewWillDisappear/viewWillAppear calls when app backgrounded/foregrounded](https://github.com/ProjectDent/ARKit-CoreLocation/pull/222)
+   - [PR #220 - Render distant nodes behind closer nodes ](https://github.com/ProjectDent/ARKit-CoreLocation/pull/220)
+    - [PR #213 - Allows specifying CALayer as POI view](https://github.com/ProjectDent/ARKit-CoreLocation/pull/213)
+    - [PR #224 - Enable default lighting ](https://github.com/ProjectDent/ARKit-CoreLocation/pull/224)
+    - [PR #220 - Render distant nodes behind closer nodes ](https://github.com/ProjectDent/ARKit-CoreLocation/pull/220)
+    - [PR #197 - Interact with location nodes](https://github.com/ProjectDent/ARKit-CoreLocation/pull/197)
+    - [PR #215 - Allow route creation from a set of polylines](https://github.com/ProjectDent/ARKit-CoreLocation/pull/215)
+- 1.2.1
+    - [PR #207 - Addresses Issue #136 - ARCL lacks CI ](https://github.com/ProjectDent/ARKit-CoreLocation/pull/207)
+    - [PR #209 - Updates polyline position/scale when GPS location is updated](https://github.com/ProjectDent/ARKit-CoreLocation/pull/209)
+    - [PR #206 - Addresses Issue #196 - setting the SceneLocationView delegate prevents scene rendering](https://github.com/ProjectDent/ARKit-CoreLocation/pull/206)
+    - [PR #204 - Converts from Swift 4.2 -> Swift 5.0](https://github.com/ProjectDent/ARKit-CoreLocation/pull/204)
+    - [PR #203 - InfoLabel includes additional heading data](https://github.com/ProjectDent/ARKit-CoreLocation/pull/203)
+    - [PR #198 - Adds support for AR Orientation Tracking](https://github.com/ProjectDent/ARKit-CoreLocation/pull/198)
+    - [PR #193 - Adds support for Swift Package Manager](https://github.com/ProjectDent/ARKit-CoreLocation/pull/193)
+- 1.2.0 
+    - [PR #185 - Custom boxes for directions](https://github.com/ProjectDent/ARKit-CoreLocation/pull/185/files)
+    - [PR #184 - adds "ignoreAltitude" to LocationNode](https://github.com/ProjectDent/ARKit-CoreLocation/pull/184)
+    - [PR #183 - Scaling schemes](https://github.com/ProjectDent/ARKit-CoreLocation/pull/183)
+    - [PR #182 - child node scaling](https://github.com/ProjectDent/ARKit-CoreLocation/pull/182)
+    - [PR #181 - Cleans up warnings](https://github.com/ProjectDent/ARKit-CoreLocation/pull/181)
+    - [PR #177 - Fixes the workspace schemes](https://github.com/ProjectDent/ARKit-CoreLocation/pull/177)
+    - [PR #176 - Fixes issue #164](https://github.com/ProjectDent/ARKit-CoreLocation/pull/176)
+        - Fixes an issue where dismissing the ARCL Scene View can make other UIs unusable
+        - Creating LocationNodes from a UIView now just creates an image from that view and uses the image.
+    - [PR #171 - Support Carthage and open SceneLocationView for extension](https://github.com/ProjectDent/ARKit-CoreLocation/pull/171)
+- 1.1.0
+    - [PR #159 - Directions (Routes) and AR Polylines](https://github.com/ProjectDent/ARKit-CoreLocation/pull/159)
+        - Adds the ability to take an array of `MKRoute` objects and render it as a route in AR (similar to the demo gif on the README)
+        - Updates the demo app to allow you to demonstrate this capability
