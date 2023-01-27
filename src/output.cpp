@@ -1,13 +1,15 @@
+#define _USE_MATH_DEFINES
 #include "holodaye/elevation.h"
 #include "holodaye/output.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <vector>
-
+#include <iostream>
 ElevationAngle::ElevationAngle(int length, float x, float y, ElevationData* data): length_(length), x_(x), y_(y), ElevData_(data) {
     border_h_ = new float[360];  // record the height with maximum slope in 360 directions
     border_d_ = new float[360];  // record the height with maximum slope in 360 directions
     max_slope_ = new float[360]; // record the maximum slope in 360 directions
+    // cur_z_ = z; 
 };
 
 void ElevationAngle::FindPeakInCircle(){
@@ -34,6 +36,7 @@ void ElevationAngle::GetMaxSlope(float angle, int index) {
     ElevationQuery elev_query(x_, y_, angle, ElevData_);     
     elev_query.query(h, d, 1); // query #data = length_
     cur_z_ = h[0];
+    std::cout<< "h[0]: " << h[0] <<std::endl;
 
     float max_border_h = 0;
     float max_border_d = 0;

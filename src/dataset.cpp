@@ -1,11 +1,14 @@
+#define _USE_MATH_DEFINES
 #include <iostream>
 #include "memory.h"
 #include "math.h"
 #include <holodaye/elevation.h>
 
-ElevationData::ElevationData(){
+ElevationData::ElevationData():ElevationData("../../data/zipped.dat"){}
+
+ElevationData::ElevationData(char* filename){
     FILE* file;
-    file = fopen("../../data/zipped.dat", "rb");
+    file = fopen(filename, "rb");
     // Here, I need to mention the format of the zipped file again
     // Bytes 0~3 int origin_x
     // Bytes 4~7 int origin_y

@@ -25,4 +25,11 @@ Since this repository contains no data, you need to first download the preproces
 Here we use Catch2 for unit tests because it is much smaller and neater than google test. About Catch2, please read their [readme](ext/Catch2/README.md) or check their [github](https://github.com/catchorg/Catch2).
 ### Landscape Demo
 Those files under the folder ```landscape_demo``` is for visualizing original/fake elevation map file. The script should be runned with Matlab.
+### Sytem requirement
+Our server is built on the Windows 11/10 and client is on the MacOS. The change of operating system is currently not allowed
+
+## Check List (before running the code)
+- Make sure the client and server are connected to the same network
+- Make sure the client and server share the same ip address and port number
+- If you want to use the north calibration, please let the mobile devie roughly facing the north direction during computation.
 
