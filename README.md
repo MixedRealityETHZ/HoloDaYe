@@ -45,6 +45,7 @@ cd HoloDaYe
 mkdir build
 cd build
 cmake ..
+make
 ```
 You will find the file in name of holodaye.exe when you compile the code successfully
 Start the exe file and it will automatically open a terminal (start of the server)
