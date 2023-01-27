@@ -11,7 +11,6 @@
 using namespace std;
 
 Struct1 LV952GPS(int E, int N){return LV952GPS(E,N,0);}
-
 Struct1 LV952GPS(int E, int N, double H) {
     Struct1 gps;
     double E_ = ((double)E - 2600000) / 1000000;
@@ -40,6 +39,8 @@ Struct2 GPS2LV95(double lon, double lat, double alt) {
     double N_ = 1200147.07 + 308807.95 * lat_ + 3745.25 * SQUARE(lon_) + 76.63 * (SQUARE(lat_)) - 194.56 * (SQUARE(lon_) * lat_) + 119.79 * (TRIPPLE(lat_));
     
     lv95.H = alt - 49.55 + 2.73 * lon_ + 6.94 * lat_;
+    // lv95.H = alt;
+
     lv95.E = ROUND_2_INT(E_);
     lv95.N = ROUND_2_INT(N_);
    
