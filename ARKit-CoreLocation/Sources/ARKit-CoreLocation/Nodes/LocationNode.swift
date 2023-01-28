@@ -125,16 +125,19 @@ open class LocationNode: SCNNode {
             if distance > 100 {
                 //If the item is too far away, bring it closer and scale it down
                 let scale = 100 / Float(distance)
+//                let scale = Float(1.0)
+                
+                let y_scale = 100 / (Float(distance))
 
                 adjustedDistance = distance * Double(scale)
 
                 let adjustedTranslation = SCNVector3( x: Float(locationTranslation.longitudeTranslation) * scale,
-                                                      y: Float(locationTranslation.altitudeTranslation) * scale,
+                                                      y: Float(locationTranslation.altitudeTranslation) * y_scale,
                                                       z: Float(locationTranslation.latitudeTranslation) * scale)
                 self.position = SCNVector3( x: position.x + adjustedTranslation.x,
                                             y: position.y + adjustedTranslation.y,
                                             z: position.z - adjustedTranslation.z)
-                self.scale = SCNVector3(x: scale, y: scale, z: scale)
+                self.scale = SCNVector3(x: scale, y: y_scale, z: scale)
             } else {
                 adjustedDistance = distance
                 self.position = SCNVector3( x: position.x + Float(locationTranslation.longitudeTranslation),
