@@ -52,3 +52,34 @@ Start the exe file and it will automatically open a terminal (start of the serve
 
 ### How to build the application (client)
 
+**Citation**: Our app is developed on the codebase of [ARKit-Corelocation](https://github.com/ProjectDent/ARKit-CoreLocation)
+
+Please build our app using Xcode on an apple device with IOS 16 or upwards.
+Our app has been tested on iPhone 12  and iPad pro-2021 with IOS 16.1.
+
+Please remember to sign the app with an apple developer account before building.
+
+#### Steps
+
+##### Setting up dependencies using CocoaPods:
+
+1. add to the podfile: 
+
+```
+pod 'ARCL'
+pod 'SwiftSocket'
+```
+
+2. In Terminal, navigate to the project folder, then:
+
+```
+pod update
+pod install
+```
+
+##### Open the project file `Elevation.xcworkspace` with Xcode
+
+1. make sure your server and your app are under the same LAN and modify the IP address in the file [`SettingsViewController.swift`](https://github.com/MixedRealityETHZ/HoloDaYe/blob/6d962f94a84856e59d2e725d7c28fba08288bfc6/ARKit-CoreLocation/ARKit%2BCoreLocation/SettingsViewController.swift#L42)
+
+2. build the app on your device with Xcode
+
