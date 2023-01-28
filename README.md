@@ -34,9 +34,9 @@ Our server is built on the Windows 11/10 and client is on the MacOS. The change 
 
 ## Check List (before running the code)
 - We use cmake to compile the code, please make sure you have the compiler with required version on your local machine before running the code
-- Make sure the client and server are connected to the same network (check ```scr\main.cpp for server ```and ```...``` for client)
-- Make sure the client and server share the same ip address and port number (check ```scr\main.cpp for server ``` and ```...``` for client)
-- If you want to use the north calibration, please let the mobile devie roughly facing the north direction during computation.
+- Make sure the client and server are connected to the same network.
+- Make sure the client and server share the same ip address and port number (check ```scr\main.cpp for server ``` and [`SettingsViewController.swift`](https://github.com/MixedRealityETHZ/HoloDaYe/blob/6d962f94a84856e59d2e725d7c28fba08288bfc6/ARKit-CoreLocation/ARKit%2BCoreLocation/SettingsViewController.swift#L42) for client)
+- If you want to use the north calibration, please let the mobile devie roughly facing the north direction before you launch the app.
 
 ## Running the code
 ### How to start the server
