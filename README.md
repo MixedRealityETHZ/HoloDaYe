@@ -82,9 +82,13 @@ pod install
 
 #### Using the app
 
-![lifecycle](https://github.com/MixedRealityETHZ/HoloDaYe/blob/main/imgs/lifecycle.jpg)
-
 [Link to the demo video](https://youtube.com/playlist?list=PLeRJM5sDl8rY7sIt78GTSx0vshNTe4Xzl)
+
+<img src="https://github.com/MixedRealityETHZ/HoloDaYe/blob/main/imgs/app-ar2.png" width="100">
+
+<img src="https://github.com/MixedRealityETHZ/HoloDaYe/blob/main/imgs/lifecycle.jpg" width="100">
+
+
 
 
 
