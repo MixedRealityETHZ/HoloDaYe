@@ -37,9 +37,14 @@ class POIViewController: UIViewController {
     var peakValue: [LocationNode]!
     var selectPeakLayer: LocationNode?
     var selectMapPoint: LocationNode?
+    var altLayer:LocationNode?
+    
+    var offset: Double!
     
     // for search on map
     var placeMark: CLPlacemark!
+    var selectPin: MKPlacemark? = nil
+    private var completer: MKLocalSearchCompleter = MKLocalSearchCompleter()
 
     var showMap = false {
         didSet {
@@ -332,7 +337,7 @@ extension POIViewController {
                                animations: {
                                 self.mapView.setCenter(self.userAnnotation!.coordinate, animated: false)
                 }, completion: { _ in
-                    self.mapView.region.span = MKCoordinateSpan(latitudeDelta: 0.0005, longitudeDelta: 0.0005)
+                    self.mapView.region.span = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
                 })
             }
 
@@ -418,10 +423,15 @@ extension POIViewController: LNTouchDelegate {
     func annotationNodeTouched(node: AnnotationNode) {
 		if let node = node.parent as? LocationNode {
 			let coords = "\(node.location.coordinate.latitude.short)° \(node.location.coordinate.longitude.short)°"
-			let altitude = "\(node.location.altitude.short)m"
+			let altitude = "\((node.location.altitude + offset).short)m"
             let tag = searchMap(locationNode: node) ?? ""
 //			let tag = node.tag ?? ""
-			nodePositionLabel.text = " This node at \(coords), \(altitude) - \(tag)"
+			nodePositionLabel.text = " This node at \(coords), \(altitude) \(tag)"
+            if altLayer != nil{
+                sceneLocationView.removeLocationNode(locationNode: altLayer!)
+            }
+//            altLayer = buildAltLayer(node: node)
+//            sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: altLayer!)
             
             if showMap{
                 let gotoLocation = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
@@ -433,11 +443,12 @@ extension POIViewController: LNTouchDelegate {
                 if !showAllPeaks{
                     let mapPoint = MKPointAnnotation()
                     mapPoint.coordinate = gotoLocation
-                    for annotation_ in mapView.annotations{
-                        if annotation_.coordinate.latitude == gotoLocation.latitude && annotation_.coordinate.longitude == gotoLocation.longitude{
-                            mapView.removeAnnotation(annotation_)
-                        }
-                    }
+//                    for annotation_ in mapView.annotations{
+//                        if annotation_.coordinate.latitude == gotoLocation.latitude && annotation_.coordinate.longitude == gotoLocation.longitude{
+//                            mapView.removeAnnotation(annotation_)
+//                        }
+//                    }
+                    mapView.removeAnnotations(mapView.annotations)
                     mapView.addAnnotation(mapPoint)
 //                    mapView.selectAnnotation(mapPoint, animated: true)
                     
@@ -447,25 +458,29 @@ extension POIViewController: LNTouchDelegate {
             if(selectPeakLayer != nil){
                 if node.location.coordinate.longitude == selectPeakLayer?.location.coordinate.longitude && node.location.coordinate.latitude == selectPeakLayer?.location.coordinate.latitude{
                     sceneLocationView.removeLocationNode(locationNode: selectPeakLayer!)
+                    peakValue.removeLast()
                 }
                 else{
                     replaceNode(node: selectPeakLayer!)
                 }
+                selectPeakLayer = nil
             }
             if(selectMapPoint != nil){
                 if node.location.coordinate.longitude == selectMapPoint?.location.coordinate.longitude && node.location.coordinate.latitude == selectMapPoint?.location.coordinate.latitude{
                     sceneLocationView.removeLocationNode(locationNode: selectMapPoint!)
+                    peakValue.removeLast()
                 }
                 else{
                     replaceNode(node: selectMapPoint!)
                 }
+                selectMapPoint = nil
             }
 //            selectPeakLayer = buildBigNode(node: node)
             sceneLocationView.removeLocationNode(locationNode: node)
 //            selectPeakLayer = buildLayer(node: node)
             selectPeakLayer = buildImageNode(node: node, imageName: "peak5")
             sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: selectPeakLayer!)
-//            peakValue.append(selectPeakLayer!)
+            peakValue.append(selectPeakLayer!)
 		}
     }
 
@@ -553,6 +568,32 @@ extension POIViewController{
         let selectPeak = buildLayerNode(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude, altitude: node.location.altitude, layer: selectPeakLayer)
         return selectPeak
     }
+    func buildAltLayer(node: LocationNode) -> LocationNode{
+        
+            
+        let selectPeakLayer = CATextLayer()
+        let altitude: String = "\((node.location.altitude + offset).short)m"
+//        selectPeakLayer.frame = CGRect(x: 50, y: 0, width: 100, height: 50)
+        selectPeakLayer.frame = CGRectMake(50, 0, 100, 50)
+        selectPeakLayer.cornerRadius = 10
+        selectPeakLayer.fontSize = 20
+        selectPeakLayer.alignmentMode = .center
+        selectPeakLayer.foregroundColor = UIColor.white.cgColor
+        selectPeakLayer.backgroundColor = UIColor(red: 51/255, green: 86/255, blue: 155/255, alpha: 1.0).cgColor
+        selectPeakLayer.string = altitude
+        selectPeakLayer.isWrapped = true
+        selectPeakLayer.contentsScale = sceneLocationView.contentScaleFactor
+//        let rotation = CATransform3DMakeRotation(CGFloat(30.0 * .pi / 180.0), 0, 0, 1.0)
+//        selectPeakLayer.transform = CATransform3DMakeRotation(.pi/2 , 0, 0, 1.0)
+        
+//        let altLabel = CATextLayer()
+//        altLabel.frame = CGRectMake(50, 0, 40, 20)
+//        altLabel.isWrapped = true
+
+//        selectPeakLayer.
+        let selectPeak = buildLayerNode(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude, altitude: node.location.altitude, layer: selectPeakLayer)
+        return selectPeak
+    }
     
     func buildBigNode(node:LocationNode) -> LocationNode{
         let coordinate = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
@@ -575,28 +616,40 @@ extension POIViewController{
     
     // find a node closest to the selected map point
     func searchForNode(latitude: CLLocationDegrees, longitude: CLLocationDegrees){
-        for peakNode in sceneLocationView.locationNodes{
+        for peakNode in peakValue{
+        
             if peakNode.location.coordinate.latitude == latitude && peakNode.location.coordinate.longitude == longitude{
+                if altLayer != nil{
+                    sceneLocationView.removeLocationNode(locationNode: altLayer!)
+                }
                 if(selectPeakLayer != nil){
                     if peakNode.location.coordinate.longitude == selectPeakLayer?.location.coordinate.longitude && peakNode.location.coordinate.latitude == selectPeakLayer?.location.coordinate.latitude{
                         sceneLocationView.removeLocationNode(locationNode: selectPeakLayer!)
+                        peakValue.removeLast()
                     }
                     else{
                         replaceNode(node: selectPeakLayer!)
                     }
+                    selectPeakLayer = nil
                 }
                 if(selectMapPoint != nil){
                     if peakNode.location.coordinate.longitude == selectMapPoint?.location.coordinate.longitude && peakNode.location.coordinate.latitude == selectMapPoint?.location.coordinate.latitude{
                         sceneLocationView.removeLocationNode(locationNode: selectMapPoint!)
+                        peakValue.removeLast()
                     }
                     else{
                         replaceNode(node: selectMapPoint!)
                     }
+                    selectMapPoint = nil
                 }
                 sceneLocationView.removeLocationNode(locationNode: peakNode)
                 selectMapPoint = buildImageNode(node: peakNode, imageName: "peak5")
                 sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: selectMapPoint!)
+                peakValue.append(selectMapPoint!)
                 updatePositionLabel(node: selectMapPoint!)
+                
+//                altLayer = buildAltLayer(node: peakNode)
+//                sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: altLayer!)
             }
         }
         return
@@ -606,15 +659,17 @@ extension POIViewController{
     func replaceNode(node:LocationNode){
         let newnode = buildSmallNode(node: node)
         sceneLocationView.removeLocationNode(locationNode: node)
+        peakValue.removeLast()
         sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: newnode)
+        peakValue.append(newnode)
         
     }
     
     func updatePositionLabel(node:LocationNode){
         let coords = "\(node.location.coordinate.latitude.short)° \(node.location.coordinate.longitude.short)°"
-        let altitude = "\(node.location.altitude.short)m"
+        let altitude = "\((node.location.altitude + offset).short)m"
         let tag = searchMap(locationNode: node) ?? ""
-        nodePositionLabel.text = " This node at \(coords), \(altitude) - \(tag)"
+        nodePositionLabel.text = " This node at \(coords), \(altitude), \(tag)"
     }
     func buildImageNode(node:LocationNode, imageName:String) -> LocationNode{
         let coordinate = CLLocationCoordinate2D(latitude: node.location.coordinate.latitude, longitude: node.location.coordinate.longitude)
@@ -658,7 +713,7 @@ extension POIViewController{
         }
 //
         if placeMark != nil{
-            print(placeMark.addressDictionary)
+//            print(placeMark.addressDictionary)
             var name: String
             if (placeMark.addressDictionary!["Name"] != nil){
                 name = placeMark.addressDictionary!["Name"] as! String
@@ -669,11 +724,10 @@ extension POIViewController{
             
             let zip = placeMark.addressDictionary?["ZIP"] as! String
             let state = placeMark.addressDictionary?["State"] as! String
-            let contry = placeMark.addressDictionary?["CountryCode"] as! String
             if name == zip{
                 name = "Unrecogenized Street Name"
             }
-            let place: [String] = [name, zip, state, contry]
+            let place: [String] = [name, zip, state]
             let result = place.joined(separator: ", ")
             print("Result", result)
             return result
@@ -682,4 +736,38 @@ extension POIViewController{
         
     }
     
+//    func searchMapKit(locationNode:LocationNode){
+//        let location  = locationNode.location
+//        let myLatitude = String(format: "%f", location!.coordinate.latitude)
+//        let myLongitude = String(format:"%f", location!.coordinate.longitude)
+//        let searchTxt = [myLatitude, myLongitude].joined(separator: ",")
+//        
+//        let request = MKLocalSearch.Request()
+//        request.naturalLanguageQuery = searchTxt 
+//    }
+    
 }
+
+extension UIImage {
+    func drawTextInImage(txt: String)->UIImage {
+        //开启图片上下文
+        UIGraphicsBeginImageContext(self.size)
+        //图形重绘
+        self.draw(in: CGRect.init(x: 0, y: 0, width: self.size.width, height: self.size.height))
+        //水印文字属性
+        let att = [NSAttributedString.Key.foregroundColor:UIColor.red,NSAttributedString.Key.font:UIFont.systemFont(ofSize: 60),NSAttributedString.Key.backgroundColor:UIColor.green]
+        //水印文字大小
+        let text = NSString(string: txt)
+        let size =  text.size(withAttributes: att)
+        //绘制文字
+        text.draw(in: CGRect.init(x: self.size.width-450, y: self.size.height-80, width: size.width, height: size.height), withAttributes: att)
+        //从当前上下文获取图片
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        //关闭上下文
+        UIGraphicsEndImageContext()
+        
+        return image!
+        
+    }
+}
+

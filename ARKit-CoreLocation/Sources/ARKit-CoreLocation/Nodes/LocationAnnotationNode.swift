@@ -115,7 +115,8 @@ open class LocationAnnotationNode: LocationNode {
         }
 
         // Translate the pivot's Y coordinate so the label will show above or below the actual node location.
-        self.pivot = SCNMatrix4MakeTranslation(0, Float(-1 * annotationHeightAdjustmentFactor) * scale, 0)
+//        self.pivot = SCNMatrix4MakeTranslation(0, Float(-1 * annotationHeightAdjustmentFactor) * scale, 0)
+        self.pivot = SCNMatrix4MakeTranslation(0, Float(0 * annotationHeightAdjustmentFactor) * scale, 0)
 
         SCNTransaction.commit()
 

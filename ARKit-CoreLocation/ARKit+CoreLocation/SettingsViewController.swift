@@ -37,13 +37,15 @@ class SettingsViewController: UIViewController {
     var peakValueMap: [MKPointAnnotation] = []
     
         // Socket swift prams
-    let host = "10.5.188.33"
+//    let host = "10.5.34.3"
 //    let host = "10.5.176.209"
-//    let host = "192.168.8.102"
+    let host = "192.168.166.80"
     let port = 54000
     var client: TCPClient?
     var connected: Result!
     var isDataSent: Bool = false
+    
+    let offset = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -169,7 +171,7 @@ class SettingsViewController: UIViewController {
                 let timeInterval_loop: TimeInterval  = loop.timeIntervalSince1970
                 let timeStamp_loop = Int(timeInterval_loop)
                 //            print(timeStamp_loop - timeStamp)
-                if (timeStamp_loop - timeStamp) >= 40{
+                if (timeStamp_loop - timeStamp) >= 20{
                     appendToTextField(string: "Time out, please refresh")
                     break
                 }
@@ -300,6 +302,7 @@ extension SettingsViewController {
         arclVC.northClibration = northCalibration.isOn
         arclVC.adjustNorthByTappingSidesOfScreen = northCalibration.isOn
         arclVC.showAllPeaks = showAllPeaks.isOn
+        arclVC.offset = offset
 
         return arclVC
     }
@@ -501,8 +504,9 @@ extension SettingsViewController {
         for i in 0...num_nodes{
             let latitude = Double(data[i*3]) ?? 0
             let longitude = Double(data[i*3+1]) ?? 0
-            let altitude = Double(data[i*3+2]) ?? 0
-            print("node: ", i, "latitude", latitude, "longitude:", longitude, "altitude:", altitude)
+            let altitude_ = Double(data[i*3+2]) ?? 0
+            let altitude = altitude_ - offset
+            print("node: ", i, "latitude", latitude, "longitude:", longitude, "altitude:", altitude+offset)
             
             let node = buildViewNode(latitude: latitude, longitude: longitude, altitude: altitude, text: "")
             let mapNode = buildMapNode(latitude: latitude, longitude: longitude, text: "")
