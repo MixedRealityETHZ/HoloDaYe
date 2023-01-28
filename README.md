@@ -81,12 +81,13 @@ pod install
 2. build the app on your device with Xcode
 
 #### Using the app
+<img src="https://github.com/MixedRealityETHZ/HoloDaYe/blob/main/imgs/lifecycle.jpg" width="400">
 
 [Link to the demo video](https://youtube.com/playlist?list=PLeRJM5sDl8rY7sIt78GTSx0vshNTe4Xzl)
 
-<img src="https://github.com/MixedRealityETHZ/HoloDaYe/blob/main/imgs/app-ar2.png" width="100">
+<img src="https://github.com/MixedRealityETHZ/HoloDaYe/blob/main/imgs/app-ar2.png" width="400">
 
-<img src="https://github.com/MixedRealityETHZ/HoloDaYe/blob/main/imgs/lifecycle.jpg" width="100">
+
 
 
 
