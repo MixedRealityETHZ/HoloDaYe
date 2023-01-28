@@ -59,9 +59,7 @@ Our app has been tested on iPhone 12  and iPad pro-2021 with IOS 16.1.
 
 Please remember to sign the app with an apple developer account before building.
 
-#### Steps
-
-##### Setting up dependencies using CocoaPods:
+#### Setting up dependencies using CocoaPods:
 
 1. add to the podfile: 
 
@@ -77,9 +75,16 @@ pod update
 pod install
 ```
 
-##### Open the project file `Elevation.xcworkspace` with Xcode
+#### Open the project file `Elevation.xcworkspace` with Xcode
 
 1. make sure your server and your app are under the same LAN and modify the IP address in the file [`SettingsViewController.swift`](https://github.com/MixedRealityETHZ/HoloDaYe/blob/6d962f94a84856e59d2e725d7c28fba08288bfc6/ARKit-CoreLocation/ARKit%2BCoreLocation/SettingsViewController.swift#L42)
-
 2. build the app on your device with Xcode
+
+#### Using the app
+
+![lifecycle](https://github.com/MixedRealityETHZ/HoloDaYe/blob/main/imgs/lifecycle.jpg)
+
+[Link to the demo video](https://youtube.com/playlist?list=PLeRJM5sDl8rY7sIt78GTSx0vshNTe4Xzl)
+
+
 
